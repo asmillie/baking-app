@@ -31,6 +31,8 @@ public class Recipe implements Parcelable
     @SerializedName("image")
     @Expose
     private String image;
+
+
     public final static Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
 
 

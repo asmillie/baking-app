@@ -21,6 +21,8 @@ public class Ingredient implements Parcelable
     @SerializedName("ingredient")
     @Expose
     private String ingredient;
+
+
     public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
 
 
