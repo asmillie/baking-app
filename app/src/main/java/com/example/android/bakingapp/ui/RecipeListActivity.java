@@ -5,16 +5,22 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Recipe;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipeListActivity extends AppCompatActivity {
 
     private RecipeListViewModel mViewModel;
     private List<Recipe> mRecipeList;
+
+    @BindView(R.id.recipe_list_tv) public TextView mRecipeListTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,8 @@ public class RecipeListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_list);
 
         initViewModel();
+
+        ButterKnife.bind(this);
     }
 
     private void initViewModel() {
@@ -31,6 +39,7 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
+                mRecipeListTV.setText(recipes.toString());
             }
         });
     }
