@@ -23,7 +23,7 @@ public class AppRepository {
     private static AppRepository sInstance;
 
     private RecipeService mRecipeService;
-    //TODO: Continue implementing Retrofit to retrieve JSON list of recipes (refer to popular movies project)
+    //TODO: Create AppDb and save json data to it
     private AppRepository(Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()

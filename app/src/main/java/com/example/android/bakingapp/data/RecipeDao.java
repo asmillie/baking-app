@@ -18,7 +18,7 @@ public interface RecipeDao {
     LiveData<Recipe> getRecipeById(Integer id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveRecipesIngredientsAndSteps(List<Recipe> recipes, List<Ingredient> ingredients, List<Step> steps);
+    void saveRecipes(List<Recipe> recipes);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void saveRecipe(Recipe recipe);
