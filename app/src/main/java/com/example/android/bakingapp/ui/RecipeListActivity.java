@@ -39,8 +39,16 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
-                mRecipeListTV.setText(recipes.toString());
+                populateUI();
             }
         });
+    }
+
+    private void populateUI() {
+        if (mRecipeList != null) {
+            for (Recipe recipe: mRecipeList) {
+                mRecipeListTV.append(recipe.getName() + " \n");
+            }
+        }
     }
 }

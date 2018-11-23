@@ -1,5 +1,9 @@
 package com.example.android.bakingapp.data;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
@@ -9,11 +13,21 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Generated through www.jsonschema2pojo.org
  */
+@Entity(tableName = "steps",
+        primaryKeys = {"id", "recipe_id"},
+        foreignKeys = @ForeignKey(entity = Recipe.class,
+                parentColumns = "id",
+                childColumns = "recipe_id",
+                onDelete = ForeignKey.CASCADE))
 public class Step implements Parcelable {
 
     @SerializedName("id")
     @Expose
     private Integer id;
+
+    @ColumnInfo(name = "recipe_id")
+    private Integer recipeId;
+
     @SerializedName("shortDescription")
     @Expose
     private String shortDescription;
@@ -80,6 +94,14 @@ public class Step implements Parcelable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
     }
 
     public String getShortDescription() {

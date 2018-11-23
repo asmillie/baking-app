@@ -1,20 +1,35 @@
 package com.example.android.bakingapp.data;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Generated through www.jsonschema2pojo.org
  */
+@Entity(tableName = "ingredients",
+        foreignKeys = @ForeignKey(entity = Recipe.class,
+                parentColumns = "id",
+                childColumns = "recipe_id",
+                onDelete = ForeignKey.CASCADE))
 public class Ingredient implements Parcelable
 {
 
+    @PrimaryKey(autoGenerate = true)
+    private Integer id;
+
+    @ColumnInfo(name = "recipe_id")
+    private Integer recipeId;
+
     @SerializedName("quantity")
     @Expose
-    private Integer quantity;
+    private double quantity;
     @SerializedName("measure")
     @Expose
     private String measure;
@@ -65,11 +80,19 @@ public class Ingredient implements Parcelable
         this.ingredient = ingredient;
     }
 
-    public Integer getQuantity() {
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getRecipeId() {
+        return recipeId;
+    }
+
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 

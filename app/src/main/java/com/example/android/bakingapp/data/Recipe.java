@@ -1,6 +1,10 @@
 package com.example.android.bakingapp.data;
 
 import java.util.List;
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
@@ -10,18 +14,21 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Generated through www.jsonschema2pojo.org
  */
+@Entity(tableName = "recipes")
 public class Recipe implements Parcelable
 {
-
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
     @SerializedName("name")
     @Expose
     private String name;
+    @Ignore
     @SerializedName("ingredients")
     @Expose
     private List<Ingredient> ingredients = null;
+    @Ignore
     @SerializedName("steps")
     @Expose
     private List<Step> steps = null;
@@ -47,9 +54,9 @@ public class Recipe implements Parcelable
             return (new Recipe[size]);
         }
 
-    }
-            ;
+    };
 
+    @Ignore
     protected Recipe(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
@@ -63,6 +70,7 @@ public class Recipe implements Parcelable
      * No args constructor for use in serialization
      *
      */
+    @Ignore
     public Recipe() {
     }
 
