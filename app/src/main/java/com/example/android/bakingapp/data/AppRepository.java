@@ -22,7 +22,8 @@ public class AppRepository {
     private static final Object LOCK = new Object();
     private static AppRepository sInstance;
 
-    private RecipeService mRecipeService;
+    private final RecipeService mRecipeService;
+    private final AppDatabase mDatabase;
     //TODO: Create AppDb and save json data to it
     private AppRepository(Context context) {
 
@@ -32,6 +33,8 @@ public class AppRepository {
                 .build();
 
         mRecipeService = retrofit.create(RecipeService.class);
+
+        mDatabase = AppDatabase.getInstance(context);
     }
 
     //Singleton instantiation of Repository, modified from AppDatabase.java
@@ -45,19 +48,22 @@ public class AppRepository {
     }
 
     public LiveData<List<Recipe>> getRecipes() {
+        LiveData<List<Recipe>> recipes = mDatabase.recipeDao().getRecipes();
         //TODO: Trigger refreshRecipes by some metric (ie. last_updated), which will
         //update the database after contacting the server for fresh data. This method
         //will then always return from the database.
-        return refreshRecipes();
+        if (recipes == null || recipes.getValue().size() == 0)
+            refreshRecipes();
+        
+        return recipes;
     }
 
-    public LiveData<List<Recipe>> refreshRecipes() {
-        final MutableLiveData<List<Recipe>> recipes = new MutableLiveData<>();
+    public void refreshRecipes() {
         mRecipeService.listRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
-                    recipes.setValue(response.body());
+                    saveRecipes(response.body());
                 } else {
                     Log.d(TAG, "Retrofit received response but encountered error retrieving data");
                 }
@@ -68,7 +74,11 @@ public class AppRepository {
                 Log.e(TAG, "Error contacting server for recipes: " + t.toString());
             }
         });
+    }
 
-        return recipes;
+    private void saveRecipes(List<Recipe> recipes) {
+        if (recipes != null && recipes.size() > 0) {
+            mDatabase.recipeDao().saveRecipes(recipes);
+        }
     }
 }
