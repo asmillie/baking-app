@@ -22,6 +22,9 @@ public interface IngredientDao {
     LiveData<Ingredient> getIngredientById(Integer id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void saveAllIngredients(List<Ingredient> ingredients);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void saveIngredient(Ingredient ingredient);
 
     @Delete

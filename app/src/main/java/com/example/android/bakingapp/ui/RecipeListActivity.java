@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Recipe;
+import com.example.android.bakingapp.data.RecipeAndInstructions;
 
 import java.util.List;
 
@@ -19,8 +20,7 @@ import butterknife.ButterKnife;
 public class RecipeListActivity extends AppCompatActivity {
 
     private RecipeListViewModel mViewModel;
-    private List<Recipe> mRecipeList;
-    private List<Ingredient> mIngredientList;
+    private List<RecipeAndInstructions> mRecipeList;
 
     @BindView(R.id.recipe_list_tv) public TextView mRecipeListTV;
 
@@ -37,22 +37,16 @@ public class RecipeListActivity extends AppCompatActivity {
     private void initViewModel() {
         mViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
 
-        mViewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+        mViewModel.getRecipeList().observe(this, new Observer<List<RecipeAndInstructions>>() {
             @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                mRecipeList = recipes;
+            public void onChanged(@Nullable List<RecipeAndInstructions> recipeAndInstructions) {
+                mRecipeList = recipeAndInstructions;
                 clearUI();
                 populateUI();
             }
         });
 
-        mViewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
-            @Override
-            public void onChanged(@Nullable List<Ingredient> ingredients) {
-                mIngredientList = ingredients;
-                populateUI();
-            }
-        });
+
     }
 
     private void clearUI() {
@@ -61,16 +55,16 @@ public class RecipeListActivity extends AppCompatActivity {
 
     private void populateUI() {
         if (mRecipeList != null) {
-            for (Recipe recipe: mRecipeList) {
-                mRecipeListTV.append(recipe.getName() + " \n");
+            for (RecipeAndInstructions recipe: mRecipeList) {
+                mRecipeListTV.append(recipe.recipe.getName() + " \n");
 
-            }
-        }
-
-        if (mIngredientList != null) {
-            mRecipeListTV.append("\n\n Ingredients: ");
-            for (Ingredient ingredient: mIngredientList) {
-                mRecipeListTV.append(ingredient.getIngredient() + "\n");
+                List<Ingredient> ingredients = recipe.getIngredients();
+                if (ingredients != null && ingredients.size() > 0) {
+                    mRecipeListTV.append("--Ingredients:");
+                    for (Ingredient ingredient: ingredients) {
+                        mRecipeListTV.append("--" + ingredient.getIngredient());
+                    }
+                }
             }
         }
     }

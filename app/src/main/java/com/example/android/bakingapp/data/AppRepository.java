@@ -59,12 +59,24 @@ public class AppRepository {
         return recipes;
     }
 
+    public LiveData<List<RecipeAndInstructions>> getRecipesAndInstructions() {
+        LiveData<List<RecipeAndInstructions>> recipes = mDatabase.recipeAndInstructionsDao().getRecipesAndInstructions();
+        if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0)
+            refreshRecipes();
+
+        return recipes;
+    }
+
     public void refreshRecipes() {
         mRecipeService.listRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
+                    Recipe recipe = response.body().get(0);
+                    Ingredient ingredient = recipe.getIngredients().get(0);
+                    Step step = recipe.getSteps().get(0);
                     saveRecipes(response.body());
+                    Log.d(TAG, "Saving JSON Recipe List, Sample: " + recipe.getName() + ", 1st Ingredient: " + ingredient.getIngredient() + ", 1st Step: " + step.getShortDescription());
                 } else {
                     Log.d(TAG, "Retrofit received response but encountered error retrieving data");
                 }
