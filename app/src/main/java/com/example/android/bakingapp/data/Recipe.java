@@ -24,11 +24,12 @@ public class Recipe implements Parcelable
     @SerializedName("name")
     @Expose
     private String name;
-    @Ignore
+
+
     @SerializedName("ingredients")
     @Expose
     private List<Ingredient> ingredients = null;
-    @Ignore
+
     @SerializedName("steps")
     @Expose
     private List<Step> steps = null;

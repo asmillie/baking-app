@@ -41,6 +41,7 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
+                clearUI();
                 populateUI();
             }
         });
@@ -54,6 +55,10 @@ public class RecipeListActivity extends AppCompatActivity {
         });
     }
 
+    private void clearUI() {
+        mRecipeListTV.setText("");
+    }
+
     private void populateUI() {
         if (mRecipeList != null) {
             for (Recipe recipe: mRecipeList) {
@@ -63,7 +68,7 @@ public class RecipeListActivity extends AppCompatActivity {
         }
 
         if (mIngredientList != null) {
-            mRecipeListTV.append("\n\n");
+            mRecipeListTV.append("\n\n Ingredients: ");
             for (Ingredient ingredient: mIngredientList) {
                 mRecipeListTV.append(ingredient.getIngredient() + "\n");
             }
