@@ -3,6 +3,8 @@ package com.example.android.bakingapp.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,6 +16,7 @@ import com.google.gson.annotations.SerializedName;
  * Generated through www.jsonschema2pojo.org
  */
 @Entity(tableName = "ingredients",
+        indices = {@Index("recipe_id")},
         foreignKeys = @ForeignKey(entity = Recipe.class,
                 parentColumns = "id",
                 childColumns = "recipe_id",
@@ -54,8 +57,9 @@ public class Ingredient implements Parcelable
 
     };
 
+    @Ignore
     protected Ingredient(Parcel in) {
-        this.quantity = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.quantity = ((double) in.readValue((double.class.getClassLoader())));
         this.measure = ((String) in.readValue((String.class.getClassLoader())));
         this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
     }
@@ -64,6 +68,7 @@ public class Ingredient implements Parcelable
      * No args constructor for use in serialization
      *
      */
+    @Ignore
     public Ingredient() {
     }
 
@@ -73,8 +78,10 @@ public class Ingredient implements Parcelable
      * @param ingredient
      * @param quantity
      */
-    public Ingredient(Integer quantity, String measure, String ingredient) {
+    public Ingredient(Integer id, Integer recipeId, double quantity, String measure, String ingredient) {
         super();
+        this.id = id;
+        this.recipeId = recipeId;
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;

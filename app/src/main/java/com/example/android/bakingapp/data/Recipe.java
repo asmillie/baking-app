@@ -70,7 +70,6 @@ public class Recipe implements Parcelable
      * No args constructor for use in serialization
      *
      */
-    @Ignore
     public Recipe() {
     }
 

@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.bakingapp.AppExecutors;
 import com.example.android.bakingapp.Constants;
 
 import java.util.List;
@@ -52,9 +53,9 @@ public class AppRepository {
         //TODO: Trigger refreshRecipes by some metric (ie. last_updated), which will
         //update the database after contacting the server for fresh data. This method
         //will then always return from the database.
-        if (recipes == null || recipes.getValue().size() == 0)
+        if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0)
             refreshRecipes();
-        
+
         return recipes;
     }
 
@@ -76,9 +77,22 @@ public class AppRepository {
         });
     }
 
-    private void saveRecipes(List<Recipe> recipes) {
+    private void saveRecipes(final List<Recipe> recipes) {
         if (recipes != null && recipes.size() > 0) {
-            mDatabase.recipeDao().saveRecipes(recipes);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDatabase.recipeDao().saveRecipes(recipes);
+                }
+            });
         }
+    }
+
+    public LiveData<List<Ingredient>> getIngredients() {
+        return mDatabase.ingredientDao().getIngredients();
+    }
+
+    public LiveData<List<Ingredient>> getIngredientsByRecipeId(Integer recipeId) {
+        return mDatabase.ingredientDao().getIngredientsByRecipeId(recipeId);
     }
 }

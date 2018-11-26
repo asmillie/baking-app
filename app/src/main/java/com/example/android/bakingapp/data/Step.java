@@ -3,9 +3,14 @@ package com.example.android.bakingapp.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +19,7 @@ import com.google.gson.annotations.SerializedName;
  */
 @Entity(tableName = "steps",
         primaryKeys = {"id", "recipe_id"},
+        indices = {@Index("recipe_id")},
         foreignKeys = @ForeignKey(entity = Recipe.class,
                 parentColumns = "id",
                 childColumns = "recipe_id",
@@ -22,8 +28,10 @@ public class Step implements Parcelable {
 
     @SerializedName("id")
     @Expose
+    @NonNull
     private Integer id;
 
+    @NonNull
     @ColumnInfo(name = "recipe_id")
     private Integer recipeId;
 
@@ -56,6 +64,7 @@ public class Step implements Parcelable {
 
     };
 
+    @Ignore
     protected Step(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.shortDescription = ((String) in.readValue((String.class.getClassLoader())));
@@ -68,6 +77,7 @@ public class Step implements Parcelable {
      * No args constructor for use in serialization
      *
      */
+    @Ignore
     public Step() {}
 
     /**
@@ -78,9 +88,10 @@ public class Step implements Parcelable {
      * @param videoURL
      * @param thumbnailURL
      */
-    public Step(Integer id, String shortDescription, String description, String videoURL, String thumbnailURL) {
+    public Step(Integer id, Integer recipeId, String shortDescription, String description, String videoURL, String thumbnailURL) {
         super();
         this.id = id;
+        this.recipeId = recipeId;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
