@@ -2,6 +2,7 @@ package com.example.android.bakingapp.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,16 +63,9 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
         mRecipeListRV.setAdapter(mAdapter);
     }
 
-    private void clearUI() {
-
-    }
-
-    private void populateUI() {
-
-    }
-
     @Override
     public void onRecipeClick(int recipeId) {
         //TODO intent to open detail view
+        RecipeAndInstructions recipe = mRecipeList.get(recipeId);
     }
 }
