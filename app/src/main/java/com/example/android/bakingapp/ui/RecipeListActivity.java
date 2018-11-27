@@ -22,8 +22,6 @@ public class RecipeListActivity extends AppCompatActivity {
     private RecipeListViewModel mViewModel;
     private List<RecipeAndInstructions> mRecipeList;
 
-    @BindView(R.id.recipe_list_tv) public TextView mRecipeListTV;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +39,6 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<RecipeAndInstructions> recipeAndInstructions) {
                 mRecipeList = recipeAndInstructions;
-                clearUI();
-                populateUI();
             }
         });
 
@@ -50,22 +46,10 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void clearUI() {
-        mRecipeListTV.setText("");
+
     }
 
     private void populateUI() {
-        if (mRecipeList != null) {
-            for (RecipeAndInstructions recipe: mRecipeList) {
-                mRecipeListTV.append(recipe.recipe.getName() + " \n");
 
-                List<Ingredient> ingredients = recipe.getIngredients();
-                if (ingredients != null && ingredients.size() > 0) {
-                    mRecipeListTV.append("--Ingredients:");
-                    for (Ingredient ingredient: ingredients) {
-                        mRecipeListTV.append("--" + ingredient.getIngredient());
-                    }
-                }
-            }
-        }
     }
 }
