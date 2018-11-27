@@ -95,10 +95,6 @@ public class Ingredient implements Parcelable
         return recipeId;
     }
 
-    public void setRecipeId(Integer recipeId) {
-        this.recipeId = recipeId;
-    }
-
     public double getQuantity() {
         return quantity;
     }

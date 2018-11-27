@@ -93,8 +93,6 @@ public class Recipe implements Parcelable
         this.image = image;
     }
 
-
-
     public Integer getId() {
         return id;
     }
