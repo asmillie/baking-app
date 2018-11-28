@@ -48,6 +48,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
+                mAdapter.setRecipeList(recipes);
             }
         });
     }

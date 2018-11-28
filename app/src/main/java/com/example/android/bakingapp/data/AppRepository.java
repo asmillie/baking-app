@@ -94,6 +94,7 @@ public class AppRepository {
                         saveRecipes(recipes);
                         saveIngredients(ingredientsAllRecipes);
                         saveSteps(stepsAllRecipes);
+                        Log.d(TAG, "Recipes successfully retrieved from api and saved in db.");
                     }
 
                 } else {
