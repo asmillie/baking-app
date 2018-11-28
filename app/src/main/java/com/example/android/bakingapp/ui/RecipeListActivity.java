@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class RecipeListActivity extends AppCompatActivity implements RecipeListAdapter.RecipeClickListener {
 
     private RecipeListViewModel mViewModel;
-    private List<RecipeAndInstructions> mRecipeList;
+    private List<Recipe> mRecipeList;
 
     private RecipeListAdapter mAdapter;
 
@@ -44,11 +44,10 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     private void initViewModel() {
         mViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
 
-        mViewModel.getRecipeList().observe(this, new Observer<List<RecipeAndInstructions>>() {
+        mViewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
             @Override
-            public void onChanged(@Nullable List<RecipeAndInstructions> recipeAndInstructions) {
-                mRecipeList = recipeAndInstructions;
-                mAdapter.setRecipeList(mRecipeList);
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                mRecipeList = recipes;
             }
         });
     }
@@ -66,6 +65,6 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     @Override
     public void onRecipeClick(int recipeId) {
         //TODO intent to open detail view
-        RecipeAndInstructions recipe = mRecipeList.get(recipeId);
+        Recipe recipe = mRecipeList.get(recipeId);
     }
 }

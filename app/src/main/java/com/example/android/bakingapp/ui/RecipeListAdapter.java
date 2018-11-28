@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.RecipeAndInstructions;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
 
-    private List<RecipeAndInstructions> mRecipeList;
+    private List<Recipe> mRecipeList;
     private Context mContext;
     private final RecipeClickListener mRecipeClickListener;
 
@@ -27,16 +28,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         void onRecipeClick(int recipeId);
     }
 
-    RecipeListAdapter(List<RecipeAndInstructions> recipeList, RecipeClickListener clickListener) {
+    RecipeListAdapter(List<Recipe> recipeList, RecipeClickListener clickListener) {
         this.mRecipeList = recipeList;
         this.mRecipeClickListener = clickListener;
     }
 
-    void setRecipeList(List<RecipeAndInstructions> recipeList) {
+    void setRecipeList(List<Recipe> recipeList) {
         this.mRecipeList = recipeList;
     }
 
-    RecipeAndInstructions getRecipeAndInstructions(int position) {
+    Recipe getRecipe(int position) {
         return mRecipeList.get(position);
     }
 
@@ -52,7 +53,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.mNameTV.setText(mRecipeList.get(position).getRecipe().getName());
+        holder.mNameTV.setText(mRecipeList.get(position).getName());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         @Override
         public void onClick(View v) {
-            int elementId = mRecipeList.get(getAdapterPosition()).getRecipe().getId();
+            int elementId = mRecipeList.get(getAdapterPosition()).getId();
             mRecipeClickListener.onRecipeClick(elementId);
         }
     }
