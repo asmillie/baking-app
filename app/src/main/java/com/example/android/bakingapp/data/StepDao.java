@@ -12,7 +12,7 @@ import java.util.List;
 public interface StepDao {
 
     @Query("SELECT * FROM steps WHERE recipe_id = :recipeId")
-    LiveData<List<Step>> getAllStepsByRecipeId(Integer recipeId);
+    LiveData<List<Step>> getStepsByRecipeId(Integer recipeId);
 
     @Query("SELECT * FROM steps WHERE id = :id")
     LiveData<Step> getStepById(Integer id);
