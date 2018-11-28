@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Recipe;
@@ -65,7 +66,8 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
 
     @Override
     public void onRecipeClick(int recipeId) {
-        //TODO intent to open detail view
-        Recipe recipe = mRecipeList.get(recipeId);
+        Intent intent = new Intent(this, RecipeInstructionsActivity.class);
+        intent.putExtra(Constants.RECIPE_ID_EXTRA, recipeId);
+        startActivity(intent);
     }
 }
