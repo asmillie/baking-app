@@ -53,7 +53,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.mNameTV.setText(mRecipeList.get(position).getName());
+        Recipe recipe = mRecipeList.get(position);
+
+        holder.mNameTV.setText(recipe.getName());
+        holder.mServingsTV.setText("Makes " + recipe.getServings() + " Servings"); //TODO: Resource string with placeholder
     }
 
     @Override
@@ -64,6 +67,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.name_tv) TextView mNameTV;
+        @BindView(R.id.servings_tv) TextView mServingsTV;
 
         @BindView(R.id.view_recipe_btn)
         Button mViewRecipeBtn;
