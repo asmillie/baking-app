@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ public class RecipeInstructionsActivity extends AppCompatActivity {
     //TODO Create Master / Detail Fragments
     //TODO Implement ViewModels & Factories
     //TODO Set up Master / Detail Views based on device screen width
-    //TODO Create intent to launch this activity in RecipeListActivity
+    private RecipeInstructionsViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,18 @@ public class RecipeInstructionsActivity extends AppCompatActivity {
             if (recipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
                 missingRecipeID();
             } else {
-                //TODO Create ViewModelFactory
-                //TODO Create ViewModel with Factory
+                initViewModel(recipeId);
             }
         } else {
             missingRecipeID();
         }
+    }
+
+    private void initViewModel(Integer recipeId) {
+        RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getApplication(), recipeId);
+
+        mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+        //TODO Observers in fragment
     }
 
     private void missingRecipeID() {
