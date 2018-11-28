@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.android.bakingapp.AppExecutors;
 import com.example.android.bakingapp.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,11 +73,29 @@ public class AppRepository {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
-                    Recipe recipe = response.body().get(0);
-                    Ingredient ingredient = recipe.getIngredients().get(0);
-                    Step step = recipe.getSteps().get(0);
-                    saveRecipes(response.body());
-                    Log.d(TAG, "Saving JSON Recipe List, Sample: " + recipe.getName() + ", 1st Ingredient: " + ingredient.getIngredient() + ", 1st Step: " + step.getShortDescription());
+                    List<Recipe> recipes = response.body();
+
+                    if (recipes != null && recipes.size() > 0) {
+                        //Loop through recipes, assign foreign keys (Recipe ID) and then save
+                        List<Ingredient> ingredientsAllRecipes = new ArrayList<>();
+                        List<Step> stepsAllRecipes = new ArrayList<>();
+                        for (Recipe recipe: recipes) {
+                            for (Ingredient ingredient: recipe.getIngredients()) {
+                                ingredient.setRecipeId(recipe.getId());
+                                ingredientsAllRecipes.add(ingredient);
+                            }
+
+                            for (Step step: recipe.getSteps()) {
+                                step.setRecipeId(recipe.getId());
+                                stepsAllRecipes.add(step);
+                            }
+                        }
+
+                        saveRecipes(recipes);
+                        saveIngredients(ingredientsAllRecipes);
+                        saveSteps(stepsAllRecipes);
+                    }
+
                 } else {
                     Log.d(TAG, "Retrofit received response but encountered error retrieving data");
                 }
@@ -95,6 +114,28 @@ public class AppRepository {
                 @Override
                 public void run() {
                     mDatabase.recipeDao().saveRecipes(recipes);
+                }
+            });
+        }
+    }
+
+    private void saveIngredients(final List<Ingredient> ingredients) {
+        if (ingredients != null && ingredients.size() > 0) {
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDatabase.ingredientDao().saveAllIngredients(ingredients);
+                }
+            });
+        }
+    }
+
+    private void saveSteps(final List<Step> steps) {
+        if (steps != null && steps.size() > 0) {
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mDatabase.stepDao().saveAllSteps(steps);
                 }
             });
         }
