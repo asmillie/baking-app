@@ -1,14 +1,24 @@
 package com.example.android.bakingapp.ui;
 
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.Ingredient;
+import com.example.android.bakingapp.data.Step;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +29,15 @@ import com.example.android.bakingapp.R;
  * create an instance of this fragment.
  */
 public class InstructionsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String INGREDIENT_BUNDLE_ARG = "ingredients";
+    private static final String STEP_BUNDLE_ARG = "steps";
+    private static final String RECIPE_ID_BUNDLE_ARG = "recipe-id";
+
+    private RecipeInstructionsViewModel mViewModel;
+
+    private List<Ingredient> mIngredients;
+    private List<Step> mSteps;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,32 +49,37 @@ public class InstructionsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment InstructionsFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static InstructionsFragment newInstance(String param1, String param2) {
-        InstructionsFragment fragment = new InstructionsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static InstructionsFragment newInstance() {
+        return new InstructionsFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        initViewModel();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //TODO: Rebuild lists into string arrays and then use simple arrayadapter to populate lists
+
+        List<String> ingredientList = new ArrayList<>();
+        if (mIngredients != null && mIngredients.size() > 0) {
+            for (Ingredient ingredient: mIngredients) {
+                String ingredientString = ingredient.getQuantity() + " " + ingredient.getMeasure() + " " + ingredient.getIngredient();
+                ingredientList.add(ingredientString);
+            }
+        }
+
+        List<String> stepsList = new ArrayList<>();
+        if (mSteps != null && mSteps.size() > 0) {
+
+        }
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_instructions, container, false);
     }
@@ -105,5 +121,23 @@ public class InstructionsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(getActivity()).get(RecipeInstructionsViewModel.class);
+
+        mViewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                mIngredients = ingredients;
+            }
+        });
+
+        mViewModel.getSteps().observe(this, new Observer<List<Step>>() {
+            @Override
+            public void onChanged(@Nullable List<Step> steps) {
+                mSteps = steps;
+            }
+        });
     }
 }

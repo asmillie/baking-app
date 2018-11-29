@@ -133,4 +133,8 @@ public class Ingredient implements Parcelable
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return quantity + " " + measure + " " + ingredient;
+    }
 }

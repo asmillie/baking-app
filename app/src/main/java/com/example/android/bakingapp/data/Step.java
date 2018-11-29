@@ -158,4 +158,8 @@ public class Step implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return shortDescription;
+    }
 }
