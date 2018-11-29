@@ -4,7 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.android.bakingapp.data.AppRepository;
-import com.example.android.bakingapp.data.RecipeAndInstructions;
+import com.example.android.bakingapp.data.Ingredient;
+import com.example.android.bakingapp.data.Step;
 
 import java.util.List;
 
@@ -12,17 +13,25 @@ class RecipeInstructionsViewModel extends ViewModel {
 
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;
-    private LiveData<List<RecipeAndInstructions>> mRecipeAndInstructions;
+    private LiveData<List<Ingredient>> mIngredients;
+    private LiveData<List<Step>> mSteps;
 
     RecipeInstructionsViewModel(AppRepository appRepository, Integer recipeId) {
         this.mAppRepository = appRepository;
         this.mRecipeId = recipeId;
     }
 
-    public LiveData<List<RecipeAndInstructions>> getRecipeAndInstructions() {
-        if (mRecipeAndInstructions == null) {
-            mRecipeAndInstructions = mAppRepository.getRecipesAndInstructionsById(mRecipeId);
+    public LiveData<List<Ingredient>> getIngredients() {
+        if (mIngredients == null) {
+            mIngredients = mAppRepository.getIngredientsByRecipeId(mRecipeId);
         }
-        return mRecipeAndInstructions;
+        return mIngredients;
+    }
+
+    public LiveData<List<Step>> getSteps() {
+        if (mSteps == null) {
+            mSteps = mAppRepository.getStepsByRecipeId(mRecipeId);
+        }
+        return mSteps;
     }
 }
