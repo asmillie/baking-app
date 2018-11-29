@@ -70,15 +70,18 @@ public class InstructionsFragment extends Fragment {
         List<String> ingredientList = new ArrayList<>();
         if (mIngredients != null && mIngredients.size() > 0) {
             for (Ingredient ingredient: mIngredients) {
-                String ingredientString = ingredient.getQuantity() + " " + ingredient.getMeasure() + " " + ingredient.getIngredient();
-                ingredientList.add(ingredientString);
+                ingredientList.add(ingredient.toString());
             }
         }
 
         List<String> stepsList = new ArrayList<>();
         if (mSteps != null && mSteps.size() > 0) {
-
+            for (Step step: mSteps) {
+                stepsList.add(step.toString());
+            }
         }
+
+
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_instructions, container, false);
