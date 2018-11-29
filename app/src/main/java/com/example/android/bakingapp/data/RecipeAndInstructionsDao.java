@@ -18,5 +18,5 @@ public interface RecipeAndInstructionsDao {
 
     @Transaction
     @Query("SELECT * FROM recipes WHERE id = :id")
-    LiveData<RecipeAndInstructions> getRecipeAndInstructionsById(Integer id);
+    LiveData<List<RecipeAndInstructions>> getRecipeAndInstructionsById(Integer id);
 }

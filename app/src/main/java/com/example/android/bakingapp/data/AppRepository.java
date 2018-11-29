@@ -60,8 +60,8 @@ public class AppRepository {
         return recipes;
     }
 
-    public LiveData<List<RecipeAndInstructions>> getRecipesAndInstructions() {
-        LiveData<List<RecipeAndInstructions>> recipes = mDatabase.recipeAndInstructionsDao().getRecipesAndInstructions();
+    public LiveData<List<RecipeAndInstructions>> getRecipesAndInstructionsById(Integer recipeId) {
+        LiveData<List<RecipeAndInstructions>> recipes = mDatabase.recipeAndInstructionsDao().getRecipeAndInstructionsById(recipeId);
         if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0)
             refreshRecipes();
 
