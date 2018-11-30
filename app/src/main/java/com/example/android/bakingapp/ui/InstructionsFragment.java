@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,8 @@ public class InstructionsFragment extends Fragment {
     @BindView(R.id.ingredient_lv)
     ListView mIngredientsListView;
 
-    @BindView(R.id.steps_lv) ListView mStepsListView;
+    @BindView(R.id.steps_rv)
+    RecyclerView mStepsRecyclerView;
 
     public InstructionsFragment() {
         // Required empty public constructor
@@ -96,16 +98,6 @@ public class InstructionsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mContext = view.getContext();
-
-        List<String> stepsList = new ArrayList<>();
-        if (mSteps != null && mSteps.size() > 0) {
-            for (Step step: mSteps) {
-                stepsList.add(step.toString());
-            }
-        }
-
-        ArrayAdapter<String> stepsAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, stepsList);
-        mStepsListView.setAdapter(stepsAdapter);
 
         // Inflate the layout for this fragment
         return view;
@@ -182,7 +174,7 @@ public class InstructionsFragment extends Fragment {
             Log.d(TAG, "Ingredients list built and ready for adapter");
         }
 
-        mIngredientsAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, ingredientList);
+        mIngredientsAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, ingredientList);
         mIngredientsListView.setAdapter(mIngredientsAdapter);
     }
 }
