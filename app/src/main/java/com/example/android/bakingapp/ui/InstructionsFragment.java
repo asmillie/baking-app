@@ -49,6 +49,9 @@ public class InstructionsFragment extends Fragment {
     private List<Ingredient> mIngredients;
     private List<Step> mSteps;
 
+    private Context mContext;
+    private ArrayAdapter<String> mIngredientsAdapter;
+
     private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.ingredient_lv)
@@ -88,19 +91,11 @@ public class InstructionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.d(TAG, "Creating fragment view");
         View view = inflater.inflate(R.layout.fragment_instructions, container, false);
         ButterKnife.bind(this, view);
 
-        List<String> ingredientList = new ArrayList<>();
-        if (mIngredients != null && mIngredients.size() > 0) {
-            for (Ingredient ingredient: mIngredients) {
-                ingredientList.add(ingredient.toString());
-            }
-        }
-
-        ArrayAdapter<String> ingredientsAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, ingredientList);
-        mIngredientsListView.setAdapter(ingredientsAdapter);
+        mContext = view.getContext();
 
         List<String> stepsList = new ArrayList<>();
         if (mSteps != null && mSteps.size() > 0) {
@@ -164,6 +159,8 @@ public class InstructionsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
                 mIngredients = ingredients;
+                populateIngredientList();
+                Log.d(TAG, "Observed change to ingredients (" + ingredients.size() + " items), list updated. Notified adapter");
             }
         });
 
@@ -171,7 +168,21 @@ public class InstructionsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Step> steps) {
                 mSteps = steps;
+                Log.d(TAG, "Observed change to steps, list updated");
             }
         });
+    }
+
+    private void populateIngredientList() {
+        List<String> ingredientList = new ArrayList<>();
+        if (mIngredients != null && mIngredients.size() > 0) {
+            for (Ingredient ingredient: mIngredients) {
+                ingredientList.add(ingredient.toString());
+            }
+            Log.d(TAG, "Ingredients list built and ready for adapter");
+        }
+
+        mIngredientsAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, ingredientList);
+        mIngredientsListView.setAdapter(mIngredientsAdapter);
     }
 }
