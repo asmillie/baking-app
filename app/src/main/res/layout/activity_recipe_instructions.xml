@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/instructions_fragment"
-    android:name="com.example.android.bakingapp.ui.InstructionsFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/instructions_container"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"/>

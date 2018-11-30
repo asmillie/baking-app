@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +37,15 @@ import butterknife.ButterKnife;
  */
 public class InstructionsFragment extends Fragment {
 
+    private static final String TAG = InstructionsFragment.class.getSimpleName();
+
     private static final String INGREDIENT_BUNDLE_ARG = "ingredients";
     private static final String STEP_BUNDLE_ARG = "steps";
     private static final String RECIPE_ID_BUNDLE_ARG = "recipe-id";
 
     private RecipeInstructionsViewModel mViewModel;
 
+    private Integer mRecipeId;
     private List<Ingredient> mIngredients;
     private List<Step> mSteps;
 
@@ -66,11 +70,19 @@ public class InstructionsFragment extends Fragment {
         return new InstructionsFragment();
     }
 
+    public void setRecipeId(Integer recipeId) {
+        this.mRecipeId = recipeId;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mRecipeId != null) {
+            initViewModel();
+        } else {
+            Log.e(TAG, "No recipe id set, cannot initialize viewmodel factory");
+        }
 
-        initViewModel();
     }
 
     @Override
@@ -144,7 +156,9 @@ public class InstructionsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        mViewModel = ViewModelProviders.of(getActivity()).get(RecipeInstructionsViewModel.class);
+        RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
+
+        mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
 
         mViewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
