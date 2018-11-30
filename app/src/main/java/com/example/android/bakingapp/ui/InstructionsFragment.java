@@ -12,13 +12,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Step;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +47,11 @@ public class InstructionsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    @BindView(R.id.ingredient_lv)
+    ListView mIngredientsListView;
+
+    @BindView(R.id.steps_lv) ListView mStepsListView;
+
     public InstructionsFragment() {
         // Required empty public constructor
     }
@@ -58,6 +69,7 @@ public class InstructionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initViewModel();
     }
 
@@ -65,7 +77,8 @@ public class InstructionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //TODO: Rebuild lists into string arrays and then use simple arrayadapter to populate lists
+        View view = inflater.inflate(R.layout.fragment_instructions, container, false);
+        ButterKnife.bind(this, view);
 
         List<String> ingredientList = new ArrayList<>();
         if (mIngredients != null && mIngredients.size() > 0) {
@@ -74,6 +87,9 @@ public class InstructionsFragment extends Fragment {
             }
         }
 
+        ArrayAdapter<String> ingredientsAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, ingredientList);
+        mIngredientsListView.setAdapter(ingredientsAdapter);
+
         List<String> stepsList = new ArrayList<>();
         if (mSteps != null && mSteps.size() > 0) {
             for (Step step: mSteps) {
@@ -81,10 +97,11 @@ public class InstructionsFragment extends Fragment {
             }
         }
 
-
+        ArrayAdapter<String> stepsAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, stepsList);
+        mStepsListView.setAdapter(stepsAdapter);
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_instructions, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
