@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
  * Use the {@link InstructionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InstructionsFragment extends Fragment {
+public class InstructionsFragment extends Fragment implements StepsAdapter.OnStepClickListener {
 
     private static final String TAG = InstructionsFragment.class.getSimpleName();
 
@@ -52,6 +53,7 @@ public class InstructionsFragment extends Fragment {
 
     private Context mContext;
     private ArrayAdapter<String> mIngredientsAdapter;
+    private StepsAdapter mStepsAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -99,6 +101,13 @@ public class InstructionsFragment extends Fragment {
 
         mContext = view.getContext();
 
+        mStepsAdapter = new StepsAdapter(mContext, this);
+
+        //mStepsRecyclerView.setHasFixedSize(true);
+        mStepsRecyclerView.setLayoutManager(
+                new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+        );
+        mStepsRecyclerView.setAdapter(mStepsAdapter);
         // Inflate the layout for this fragment
         return view;
     }
@@ -125,6 +134,11 @@ public class InstructionsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStepSelected(Integer stepId) {
+
     }
 
     /**
@@ -160,6 +174,7 @@ public class InstructionsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Step> steps) {
                 mSteps = steps;
+                mStepsAdapter.setStepList(steps);
                 Log.d(TAG, "Observed change to steps, list updated");
             }
         });
@@ -177,4 +192,6 @@ public class InstructionsFragment extends Fragment {
         mIngredientsAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, ingredientList);
         mIngredientsListView.setAdapter(mIngredientsAdapter);
     }
+
+
 }
