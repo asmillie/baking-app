@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Recipe;
-import com.example.android.bakingapp.data.RecipeAndInstructions;
 
 import java.util.List;
 

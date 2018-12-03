@@ -26,12 +26,12 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         void onStepSelected(Integer stepId);
     }
 
-    public StepsAdapter(Context context, OnStepClickListener clickListener) {
+    StepsAdapter(Context context, OnStepClickListener clickListener) {
         this.mContext = context;
         this.mClickListener = clickListener;
     }
 
-    public void setStepList(List<Step> stepList) {
+    void setStepList(List<Step> stepList) {
         this.mStepList = stepList;
         notifyDataSetChanged();
     }
