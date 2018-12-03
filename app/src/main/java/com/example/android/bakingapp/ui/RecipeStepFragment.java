@@ -123,7 +123,9 @@ public class RecipeStepFragment extends Fragment {
         super.onDetach();
         //mListener = null;
         if (mVideoPlayer != null) {
+            mVideoPlayer.stop();
             mVideoPlayer.release();
+            mVideoPlayer = null;
         }
     }
 
@@ -162,30 +164,38 @@ public class RecipeStepFragment extends Fragment {
         }
 
         if (mVideoPlayer == null) {
+            Log.d(TAG, "Initializing video player");
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
 
             mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
             mVideoPlayerView.setPlayer(mVideoPlayer);
+            mVideoPlayerView.setUseController(true);
+            mVideoPlayerView.setControllerHideOnTouch(false);
+            mVideoPlayerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS);
             loadMedia(getStepVideoUri());
         }
     }
 
     private void loadMedia(Uri uri) {
-        // Produces DataSource instances through which media data is loaded.
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
-                Util.getUserAgent(getContext(), "yourApplicationName"));
-        // This is the MediaSource representing the media to be played.
-        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri);
-        // Prepare the player with the source.
-        mVideoPlayer.prepare(videoSource);
+        if (uri != null) {
+            // Produces DataSource instances through which media data is loaded.
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+                    Util.getUserAgent(getContext(), "BakingApp"));
+            // This is the MediaSource representing the media to be played.
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(uri);
+            // Prepare the player with the source.
+            mVideoPlayer.prepare(videoSource);
+            mVideoPlayer.setPlayWhenReady(true);
+            Log.d(TAG, "Loading video into player");
+        }
     }
 
     private Uri getStepVideoUri() {
         String videoUrl = mStep.getVideoURL();
-
+        Log.d(TAG, "Creating video url for " + videoUrl);
         Uri uri = null;
         if (videoUrl != null) {
             uri = Uri.parse(videoUrl);
