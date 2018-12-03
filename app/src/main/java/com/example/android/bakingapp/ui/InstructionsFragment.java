@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
@@ -138,7 +139,9 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
     @Override
     public void onStepSelected(Integer stepId) {
-
+        Toast toast = Toast.makeText(mContext, "Selected step " + stepId, Toast.LENGTH_SHORT);
+        toast.show();
+        //TODO Launch intent to step activity
     }
 
     /**
