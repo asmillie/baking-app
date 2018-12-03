@@ -1,12 +1,10 @@
 package com.example.android.bakingapp.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,20 @@ import android.widget.TextView;
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Step;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.RenderersFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,14 +36,19 @@ public class RecipeStepFragment extends Fragment {
 
     private static final String TAG = RecipeStepFragment.class.getSimpleName();
 
-    // TODO: Rename and change types of parameters
     private Integer mRecipeId;
     private Step mStep;
+
     private RecipeInstructionsViewModel mViewModel;
+    private SimpleExoPlayer mVideoPlayer;
+    private static MediaSessionCompat mMediaSession;
 
     //private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.step_description) TextView mStepDesc;
+    @BindView(R.id.recipe_step_video) PlayerView mVideoPlayerView;
+
+
 
     public RecipeStepFragment() {
         // Required empty public constructor
@@ -76,6 +93,8 @@ public class RecipeStepFragment extends Fragment {
             mStepDesc.setText(stepDesc);
         }
 
+        initVideoPlayer();
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -98,13 +117,16 @@ public class RecipeStepFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
+*/
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        //mListener = null;
+        if (mVideoPlayer != null) {
+            mVideoPlayer.release();
+        }
     }
-*/
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -125,7 +147,49 @@ public class RecipeStepFragment extends Fragment {
         RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
 
         mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+    }
 
+    /**
+     * Simple Exo Player implemented following
+     * Udacity Advanced Android Classical Music Quiz
+     * and
+     * ExoPlayer Documentation @ https://google.github.io/ExoPlayer/guide.html
+     */
+    private void initVideoPlayer() {
+        String mediaUrl = mStep.getVideoURL();
+        if (mediaUrl == null || mediaUrl.equals("")) {
+           return;
+        }
 
+        if (mVideoPlayer == null) {
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            LoadControl loadControl = new DefaultLoadControl();
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
+
+            mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
+            mVideoPlayerView.setPlayer(mVideoPlayer);
+            loadMedia(getStepVideoUri());
+        }
+    }
+
+    private void loadMedia(Uri uri) {
+        // Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+                Util.getUserAgent(getContext(), "yourApplicationName"));
+        // This is the MediaSource representing the media to be played.
+        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri);
+        // Prepare the player with the source.
+        mVideoPlayer.prepare(videoSource);
+    }
+
+    private Uri getStepVideoUri() {
+        String videoUrl = mStep.getVideoURL();
+
+        Uri uri = null;
+        if (videoUrl != null) {
+            uri = Uri.parse(videoUrl);
+        }
+        return uri;
     }
 }
