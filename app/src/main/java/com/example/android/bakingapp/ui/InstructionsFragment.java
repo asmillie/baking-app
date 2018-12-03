@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,12 +86,30 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mRecipeId = savedInstanceState.getInt(RECIPE_ID_BUNDLE_ARG);
+        }
+
         if (mRecipeId != null) {
             initViewModel();
         } else {
             Log.e(TAG, "No recipe id set, cannot initialize viewmodel factory");
         }
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(RECIPE_ID_BUNDLE_ARG, mRecipeId);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            mRecipeId = savedInstanceState.getInt(RECIPE_ID_BUNDLE_ARG);
+        }
     }
 
     @Override
@@ -141,7 +160,9 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     public void onStepSelected(Integer stepId) {
         Toast toast = Toast.makeText(mContext, "Selected step " + stepId, Toast.LENGTH_SHORT);
         toast.show();
-        //TODO Launch intent to step activity
+        //TODO Bundle step
+        //TODO Tablet: Pass bundle to fragment
+        //TODO Phone: Pass bundle to activity
     }
 
     /**
