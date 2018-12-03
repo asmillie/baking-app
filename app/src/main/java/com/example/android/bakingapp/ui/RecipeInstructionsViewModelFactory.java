@@ -12,11 +12,6 @@ public class RecipeInstructionsViewModelFactory extends ViewModelProvider.Androi
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;
 
-    /**
-     * Creates a {@code AndroidViewModelFactory}
-     *
-     * @param application an application to pass in {@link AndroidViewModel}
-     */
     RecipeInstructionsViewModelFactory(@NonNull Application application, Integer recipeId) {
         super(application);
         mAppRepository = AppRepository.getInstance(application.getApplicationContext());

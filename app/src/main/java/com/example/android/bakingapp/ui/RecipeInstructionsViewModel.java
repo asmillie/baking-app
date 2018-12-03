@@ -15,20 +15,21 @@ class RecipeInstructionsViewModel extends ViewModel {
     private final Integer mRecipeId;
     private LiveData<List<Ingredient>> mIngredients;
     private LiveData<List<Step>> mSteps;
+    private LiveData<Step> mStep;
 
     RecipeInstructionsViewModel(AppRepository appRepository, Integer recipeId) {
         this.mAppRepository = appRepository;
         this.mRecipeId = recipeId;
     }
 
-    public LiveData<List<Ingredient>> getIngredients() {
+    LiveData<List<Ingredient>> getIngredients() {
         if (mIngredients == null) {
             mIngredients = mAppRepository.getIngredientsByRecipeId(mRecipeId);
         }
         return mIngredients;
     }
 
-    public LiveData<List<Step>> getSteps() {
+    LiveData<List<Step>> getSteps() {
         if (mSteps == null) {
             mSteps = mAppRepository.getStepsByRecipeId(mRecipeId);
         }

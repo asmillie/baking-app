@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Step;
@@ -42,10 +44,6 @@ import butterknife.ButterKnife;
 public class InstructionsFragment extends Fragment implements StepsAdapter.OnStepClickListener {
 
     private static final String TAG = InstructionsFragment.class.getSimpleName();
-
-    private static final String INGREDIENT_BUNDLE_ARG = "ingredients";
-    private static final String STEP_BUNDLE_ARG = "steps";
-    private static final String RECIPE_ID_BUNDLE_ARG = "recipe-id";
 
     private RecipeInstructionsViewModel mViewModel;
 
@@ -87,7 +85,7 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mRecipeId = savedInstanceState.getInt(RECIPE_ID_BUNDLE_ARG);
+            mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
         }
 
         if (mRecipeId != null) {
@@ -101,14 +99,14 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(RECIPE_ID_BUNDLE_ARG, mRecipeId);
+        outState.putInt(Constants.RECIPE_ID_EXTRA, mRecipeId);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            mRecipeId = savedInstanceState.getInt(RECIPE_ID_BUNDLE_ARG);
+            mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
         }
     }
 
@@ -157,12 +155,12 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     }
 
     @Override
-    public void onStepSelected(Integer stepId) {
-        Toast toast = Toast.makeText(mContext, "Selected step " + stepId, Toast.LENGTH_SHORT);
-        toast.show();
-        //TODO Bundle step
-        //TODO Tablet: Pass bundle to fragment
-        //TODO Phone: Pass bundle to activity
+    public void onStepSelected(Step step) {
+        //TODO Tablet: Pass to fragment
+        Intent intent = new Intent(mContext, RecipeStepActivity.class);
+        intent.putExtra(Constants.RECIPE_ID_EXTRA, mRecipeId);
+        intent.putExtra(Constants.RECIPE_STEP_BUNDLE_EXTRA, step);
+        startActivity(intent);
     }
 
     /**

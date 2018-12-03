@@ -1,53 +1,47 @@
 package com.example.android.bakingapp.ui;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.Step;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecipeStepFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecipeStepFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipeStepFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    private static final String TAG = RecipeStepFragment.class.getSimpleName();
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Integer mRecipeId;
+    private Step mStep;
+    private RecipeInstructionsViewModel mViewModel;
 
-    private OnFragmentInteractionListener mListener;
+    //private OnFragmentInteractionListener mListener;
+
+    @BindView(R.id.step_description) TextView mStepDesc;
 
     public RecipeStepFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RecipeStepFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeStepFragment newInstance(String param1, String param2) {
+    public static RecipeStepFragment newInstance(Integer recipeId, Step step) {
         RecipeStepFragment fragment = new RecipeStepFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(Constants.RECIPE_ID_EXTRA, recipeId);
+        args.putParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA, step);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,19 +50,38 @@ public class RecipeStepFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mRecipeId = getArguments().getInt(Constants.RECIPE_STEP_ID_EXTRA);
+            mStep = getArguments().getParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
+            mStep = savedInstanceState.getParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA);
+        }
+
+        View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
+        ButterKnife.bind(this, view);
+
+        String stepDesc = mStep.getDescription();
+        String stepShortDesc = mStep.getShortDescription();
+
+        if (stepDesc == null || stepDesc.equals("")) {
+            mStepDesc.setText("No description found");
+        } else {
+            mStepDesc.setText(stepDesc);
+        }
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_step, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
+    /*
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -91,7 +104,7 @@ public class RecipeStepFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
+*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -102,8 +115,17 @@ public class RecipeStepFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+    /*
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    } */
+
+    private void initViewModel() {
+        RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
+
+        mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+
+
     }
 }

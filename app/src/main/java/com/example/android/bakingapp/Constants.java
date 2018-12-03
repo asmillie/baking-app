@@ -10,4 +10,11 @@ public class Constants {
     /** Extra for storing Recipe IDs **/
     public static final String RECIPE_ID_EXTRA = "recipe-id";
     public static final Integer RECIPE_ID_EXTRA_DEFAULT = -1;
+
+    /** Extra for storing Recipe Step IDs **/
+    public static final String RECIPE_STEP_ID_EXTRA = "recipe-step-id";
+    public static final Integer RECIPE_STEP_ID_DEFAULT = -1;
+
+    /** Extra for bundling Recipe Step **/
+    public static final String RECIPE_STEP_BUNDLE_EXTRA = "recipe-step";
 }
