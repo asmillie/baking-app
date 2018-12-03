@@ -60,7 +60,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         @BindView(R.id.short_description_tv)
         TextView mShortDescTV;
 
-        public StepViewHolder(View itemView) {
+        StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mShortDescTV.setOnClickListener(this);
