@@ -32,6 +32,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +63,8 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
     @BindView(R.id.steps_rv)
     RecyclerView mStepsRecyclerView;
+
+    private Unbinder unbinder;
 
     public InstructionsFragment() {
         // Required empty public constructor
@@ -115,7 +118,7 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
                              Bundle savedInstanceState) {
         Log.d(TAG, "Creating fragment view");
         View view = inflater.inflate(R.layout.fragment_instructions, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         mContext = view.getContext();
 
@@ -152,6 +155,12 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override

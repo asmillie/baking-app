@@ -12,6 +12,9 @@ import android.widget.Toast;
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 
+import butterknife.BindBool;
+import butterknife.ButterKnife;
+
 public class RecipeInstructionsActivity extends AppCompatActivity implements InstructionsFragment.OnFragmentInteractionListener {
 
     private static final String TAG = RecipeInstructionsActivity.class.getSimpleName();
@@ -22,12 +25,16 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     private RecipeInstructionsViewModel mViewModel;
     private Integer mRecipeId;
 
+    @BindBool(R.bool.two_pane_mode_enabled) Boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_instructions);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ButterKnife.bind(this);
 
         Integer recipeId = Constants.RECIPE_ID_EXTRA_DEFAULT;
         if (savedInstanceState != null) {
@@ -48,6 +55,10 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
             missingRecipeID();
         } else {
             mRecipeId = recipeId;
+
+
+
+
             initViewModel(recipeId);
             initFragments();
         }

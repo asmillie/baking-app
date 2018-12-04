@@ -33,6 +33,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class RecipeStepFragment extends Fragment {
 
@@ -51,7 +52,7 @@ public class RecipeStepFragment extends Fragment {
     @BindView(R.id.step_description) TextView mStepDesc;
     @BindView(R.id.recipe_step_video) PlayerView mVideoPlayerView;
 
-
+    private Unbinder unbinder;
 
     public RecipeStepFragment() {
         // Required empty public constructor
@@ -85,7 +86,7 @@ public class RecipeStepFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         initViewModel();
         initVideoPlayer();
@@ -121,6 +122,12 @@ public class RecipeStepFragment extends Fragment {
             mVideoPlayer.release();
             mVideoPlayer = null;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     /**
