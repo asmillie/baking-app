@@ -1,8 +1,10 @@
 package com.example.android.bakingapp.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class RecipeStepFragment extends Fragment {
     private static final String TAG = RecipeStepFragment.class.getSimpleName();
 
     private Integer mRecipeId;
+    private Integer mStepId;
     private Step mStep;
 
     private RecipeInstructionsViewModel mViewModel;
@@ -54,11 +57,11 @@ public class RecipeStepFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RecipeStepFragment newInstance(Integer recipeId, Step step) {
+    public static RecipeStepFragment newInstance(Integer recipeId, Integer stepId) {
         RecipeStepFragment fragment = new RecipeStepFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.RECIPE_ID_EXTRA, recipeId);
-        args.putParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA, step);
+        args.putInt(Constants.RECIPE_STEP_ID_EXTRA, stepId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,8 +70,8 @@ public class RecipeStepFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mRecipeId = getArguments().getInt(Constants.RECIPE_STEP_ID_EXTRA);
-            mStep = getArguments().getParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA);
+            mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
+            mStepId = getArguments().getInt(Constants.RECIPE_STEP_ID_EXTRA);
         }
     }
 
@@ -78,24 +81,15 @@ public class RecipeStepFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
-            mStep = savedInstanceState.getParcelable(Constants.RECIPE_STEP_BUNDLE_EXTRA);
+            mStepId = savedInstanceState.getInt(Constants.RECIPE_STEP_ID_EXTRA);
         }
 
         View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
         ButterKnife.bind(this, view);
 
-        String stepDesc = mStep.getDescription();
-        String stepShortDesc = mStep.getShortDescription();
-
-        if (stepDesc == null || stepDesc.equals("")) {
-            mStepDesc.setText("No description found");
-        } else {
-            mStepDesc.setText(stepDesc);
-        }
-
+        initViewModel();
         initVideoPlayer();
 
-        // Inflate the layout for this fragment
         return view;
     }
 
@@ -146,9 +140,38 @@ public class RecipeStepFragment extends Fragment {
     } */
 
     private void initViewModel() {
-        RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
+        if (mRecipeId != null && mStepId != null) {
+            RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
 
-        mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+            mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+
+            mViewModel.setStepId(mStepId);
+
+            mViewModel.mStep.observe(this, new Observer<Step>() {
+                @Override
+                public void onChanged(@Nullable Step step) {
+                    mStep = step;
+                    populateUI();
+                }
+            });
+        }
+    }
+
+    private void populateUI() {
+        String stepDesc = mStep.getDescription();
+        String stepShortDesc = mStep.getShortDescription();
+
+        if (stepDesc == null || stepDesc.equals("")) {
+            mStepDesc.setText("No description found");
+        } else {
+            mStepDesc.setText(stepDesc);
+        }
+
+        if (mVideoPlayer == null) {
+            initVideoPlayer();
+        }
+
+        loadMedia(getStepVideoUri());
     }
 
     /**
@@ -158,11 +181,6 @@ public class RecipeStepFragment extends Fragment {
      * ExoPlayer Documentation @ https://google.github.io/ExoPlayer/guide.html
      */
     private void initVideoPlayer() {
-        String mediaUrl = mStep.getVideoURL();
-        if (mediaUrl == null || mediaUrl.equals("")) {
-           return;
-        }
-
         if (mVideoPlayer == null) {
             Log.d(TAG, "Initializing video player");
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -174,7 +192,6 @@ public class RecipeStepFragment extends Fragment {
             mVideoPlayerView.setUseController(true);
             mVideoPlayerView.setControllerHideOnTouch(false);
             mVideoPlayerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS);
-            loadMedia(getStepVideoUri());
         }
     }
 

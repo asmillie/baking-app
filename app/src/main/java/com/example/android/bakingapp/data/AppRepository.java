@@ -153,4 +153,8 @@ public class AppRepository {
     public LiveData<List<Step>> getStepsByRecipeId(Integer recipeId) {
         return mDatabase.stepDao().getStepsByRecipeId(recipeId);
     }
+
+    public LiveData<Step> getStepById(Integer stepId) {
+        return mDatabase.stepDao().getStepById(stepId);
+    }
 }

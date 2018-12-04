@@ -155,11 +155,11 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     }
 
     @Override
-    public void onStepSelected(Step step) {
+    public void onStepSelected(Integer stepId) {
         //TODO Tablet: Pass to fragment
         Intent intent = new Intent(mContext, RecipeStepActivity.class);
         intent.putExtra(Constants.RECIPE_ID_EXTRA, mRecipeId);
-        intent.putExtra(Constants.RECIPE_STEP_BUNDLE_EXTRA, step);
+        intent.putExtra(Constants.RECIPE_STEP_ID_EXTRA, stepId);
         startActivity(intent);
     }
 

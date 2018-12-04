@@ -23,7 +23,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
     private final OnStepClickListener mClickListener;
 
     public interface OnStepClickListener {
-        void onStepSelected(Step step);
+        void onStepSelected(Integer stepId);
     }
 
     StepsAdapter(Context context, OnStepClickListener clickListener) {
@@ -68,7 +68,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
 
         @Override
         public void onClick(View v) {
-            mClickListener.onStepSelected(mStepList.get(getAdapterPosition()));
+            Integer elementId = mStepList.get(getAdapterPosition()).getId();
+            mClickListener.onStepSelected(elementId);
         }
     }
 }
