@@ -36,12 +36,26 @@ public class RecipeStepActivity extends AppCompatActivity {
             //TODO Toast message for missing id?
         }
 
-        RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(recipeId, stepId);
+        initViewModel(recipeId, stepId);
+
+        RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(recipeId);
+        recipeStepFragment.setStepId(stepId);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
                 .add(R.id.recipe_step_fragment_container, recipeStepFragment)
                 .commit();
 
+    }
+
+    private void initViewModel(Integer recipeId, Integer stepId) {
+        if (recipeId != null && stepId != null) {
+            RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getApplication(), recipeId);
+
+            mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+
+            mViewModel.setStepId(stepId);
+        }
     }
 }

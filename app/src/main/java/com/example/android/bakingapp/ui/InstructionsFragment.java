@@ -1,32 +1,27 @@
 package com.example.android.bakingapp.ui;
 
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Step;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,19 +29,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link InstructionsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link InstructionsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InstructionsFragment extends Fragment implements StepsAdapter.OnStepClickListener {
 
     private static final String TAG = InstructionsFragment.class.getSimpleName();
 
     private RecipeInstructionsViewModel mViewModel;
+
+    OnStepSelectedListener mStepSelectedListener;
 
     private Integer mRecipeId;
     private List<Ingredient> mIngredients;
@@ -63,6 +52,10 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     RecyclerView mStepsRecyclerView;
 
     private Unbinder unbinder;
+
+    public interface OnStepSelectedListener {
+        void onStepSelected(Integer stepId);
+    }
 
     public InstructionsFragment() {
         // Required empty public constructor
@@ -132,6 +125,18 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mStepSelectedListener = (OnStepSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                + " must implement OnStepSelectedListener");
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -139,17 +144,13 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
     @Override
     public void onStepSelected(Integer stepId) {
-        //TODO Tablet: Pass to fragment
-        Intent intent = new Intent(mContext, RecipeStepActivity.class);
-        intent.putExtra(Constants.RECIPE_ID_EXTRA, mRecipeId);
-        intent.putExtra(Constants.RECIPE_STEP_ID_EXTRA, stepId);
-        startActivity(intent);
+        mStepSelectedListener.onStepSelected(stepId);
     }
 
     private void initViewModel() {
         RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
 
-        mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
 
         mViewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override

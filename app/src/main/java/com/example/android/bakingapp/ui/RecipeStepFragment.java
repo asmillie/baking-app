@@ -58,13 +58,21 @@ public class RecipeStepFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RecipeStepFragment newInstance(Integer recipeId, Integer stepId) {
+    public static RecipeStepFragment newInstance(Integer recipeId) {
         RecipeStepFragment fragment = new RecipeStepFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.RECIPE_ID_EXTRA, recipeId);
-        args.putInt(Constants.RECIPE_STEP_ID_EXTRA, stepId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setStepId(Integer stepId) {
+        if (mViewModel == null) {
+            mStepId = stepId;
+            initViewModel();
+        } else {
+            mViewModel.setStepId(stepId);
+        }
     }
 
     @Override
@@ -72,7 +80,6 @@ public class RecipeStepFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
-            mStepId = getArguments().getInt(Constants.RECIPE_STEP_ID_EXTRA);
         }
     }
 
@@ -82,7 +89,6 @@ public class RecipeStepFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
-            mStepId = savedInstanceState.getInt(Constants.RECIPE_STEP_ID_EXTRA);
         }
 
         View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
@@ -147,14 +153,12 @@ public class RecipeStepFragment extends Fragment {
     } */
 
     private void initViewModel() {
-        if (mRecipeId != null && mStepId != null) {
+        if (mRecipeId != null) {
             RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
 
-            mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+            mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
 
-            mViewModel.setStepId(mStepId);
-
-            mViewModel.mStep.observe(this, new Observer<Step>() {
+            mViewModel.getStep().observe(this, new Observer<Step>() {
                 @Override
                 public void onChanged(@Nullable Step step) {
                     mStep = step;
@@ -165,20 +169,22 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void populateUI() {
-        String stepDesc = mStep.getDescription();
-        String stepShortDesc = mStep.getShortDescription();
+        if (mStep != null) {
+            String stepDesc = mStep.getDescription();
+            String stepShortDesc = mStep.getShortDescription();
 
-        if (stepDesc == null || stepDesc.equals("")) {
-            mStepDesc.setText("No description found");
-        } else {
-            mStepDesc.setText(stepDesc);
+            if (stepDesc == null || stepDesc.equals("")) {
+                mStepDesc.setText("No description found");
+            } else {
+                mStepDesc.setText(stepDesc);
+            }
+
+            if (mVideoPlayer == null) {
+                initVideoPlayer();
+            }
+
+            loadMedia(getStepVideoUri());
         }
-
-        if (mVideoPlayer == null) {
-            initVideoPlayer();
-        }
-
-        loadMedia(getStepVideoUri());
     }
 
     /**

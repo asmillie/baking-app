@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.example.android.bakingapp.data.AppRepository;
 import com.example.android.bakingapp.data.Ingredient;
@@ -13,6 +14,8 @@ import com.example.android.bakingapp.data.Step;
 import java.util.List;
 
 class RecipeInstructionsViewModel extends ViewModel {
+
+    private static final String TAG = RecipeInstructionsViewModel.class.getSimpleName();
 
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;
@@ -24,10 +27,11 @@ class RecipeInstructionsViewModel extends ViewModel {
      * @ https://developer.android.com/reference/android/arch/lifecycle/Transformations
      */
     private final MutableLiveData<Integer> mStepId = new MutableLiveData<>();
-    public LiveData<Step> mStep = Transformations.switchMap(mStepId, new Function<Integer, LiveData<Step>>() {
+    private LiveData<Step> mStep = Transformations.switchMap(mStepId, new Function<Integer, LiveData<Step>>() {
         @Override
         public LiveData<Step> apply(Integer stepId) {
             if (mAppRepository != null) {
+                Log.d(TAG, "Viewmodel retrieving new step from repository");
                 return mAppRepository.getStepById(stepId);
             }
             return null;
@@ -54,6 +58,12 @@ class RecipeInstructionsViewModel extends ViewModel {
     }
 
     void setStepId(Integer stepId) {
+        Log.d(TAG, "Setting step id to " + stepId);
         mStepId.setValue(stepId);
+    }
+
+    LiveData<Step> getStep() {
+        Log.d(TAG, "Returning step from ViewModel");
+        return mStep;
     }
 }

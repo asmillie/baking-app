@@ -15,6 +15,6 @@ public class Constants {
     public static final String RECIPE_STEP_ID_EXTRA = "recipe-step-id";
     public static final Integer RECIPE_STEP_ID_DEFAULT = -1;
 
-    /** Extra for bundling Recipe Step **/
-    public static final String RECIPE_STEP_BUNDLE_EXTRA = "recipe-step";
+    /** Default step Id **/
+    public static final Integer SELECTED_STEP_ID_DEFAULT = 0;
 }

@@ -18,7 +18,7 @@ import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeInstructionsActivity extends AppCompatActivity {
+public class RecipeInstructionsActivity extends AppCompatActivity implements InstructionsFragment.OnStepSelectedListener {
 
     private static final String TAG = RecipeInstructionsActivity.class.getSimpleName();
 
@@ -91,7 +91,10 @@ public class RecipeInstructionsActivity extends AppCompatActivity {
         RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getApplication(), recipeId);
 
         mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
-        //TODO Observers in fragment
+
+        if (mTwoPane) {
+            mViewModel.setStepId(Constants.SELECTED_STEP_ID_DEFAULT);
+        }
     }
 
     private void initFragments() {
@@ -105,7 +108,7 @@ public class RecipeInstructionsActivity extends AppCompatActivity {
                 .commit();
 
         if (mTwoPane) {
-            RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(mRecipeId, 0);
+            RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(mRecipeId);
 
             fragmentManager.beginTransaction()
                     .add(R.id.step_fragment_container, recipeStepFragment)
@@ -117,5 +120,17 @@ public class RecipeInstructionsActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(this, "No recipe selected", Toast.LENGTH_SHORT);
         toast.show();
         finish();
+    }
+
+    @Override
+    public void onStepSelected(Integer stepId) {
+        if (!mTwoPane) {
+            Intent intent = new Intent(this, RecipeStepActivity.class);
+            intent.putExtra(Constants.RECIPE_ID_EXTRA, mRecipeId);
+            intent.putExtra(Constants.RECIPE_STEP_ID_EXTRA, stepId);
+            startActivity(intent);
+        } else if (mViewModel != null) {
+            mViewModel.setStepId(stepId);
+        }
     }
 }
