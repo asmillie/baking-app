@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.RecipeListActivity">
+        <activity android:name=".ui.RecipeListActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +21,8 @@
         </activity>
         <activity
             android:name=".ui.RecipeInstructionsActivity"
-            android:parentActivityName=".ui.RecipeListActivity">
+            android:parentActivityName=".ui.RecipeListActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.RecipeListActivity" />

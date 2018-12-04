@@ -20,6 +20,8 @@ public class RecipeStepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         Integer recipeId = intent.getIntExtra(Constants.RECIPE_ID_EXTRA, Constants.RECIPE_STEP_ID_DEFAULT);
         Step step = intent.getParcelableExtra(Constants.RECIPE_STEP_BUNDLE_EXTRA);
