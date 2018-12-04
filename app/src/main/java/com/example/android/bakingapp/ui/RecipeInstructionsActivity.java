@@ -3,19 +3,22 @@ package com.example.android.bakingapp.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 
 import butterknife.BindBool;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeInstructionsActivity extends AppCompatActivity implements InstructionsFragment.OnFragmentInteractionListener {
+public class RecipeInstructionsActivity extends AppCompatActivity {
 
     private static final String TAG = RecipeInstructionsActivity.class.getSimpleName();
 
@@ -25,7 +28,11 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     private RecipeInstructionsViewModel mViewModel;
     private Integer mRecipeId;
 
-    @BindBool(R.bool.two_pane_mode_enabled) Boolean mTwoPane;
+    @Nullable @BindView(R.id.step_fragment_container)
+    FrameLayout stepFragmentContainer;
+
+    @BindBool(R.bool.two_pane_mode_enabled) boolean mTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +63,10 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
         } else {
             mRecipeId = recipeId;
 
-
-
+            if (stepFragmentContainer != null) {
+                mTwoPane = true;
+                Log.d(TAG, "Two pane mode enabled");
+            }
 
             initViewModel(recipeId);
             initFragments();
@@ -92,18 +101,21 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
         instructionsFragment.setRecipeId(mRecipeId);
 
         fragmentManager.beginTransaction()
-                .add(R.id.instructions_container, instructionsFragment)
+                .add(R.id.instructions_fragment_container, instructionsFragment)
                 .commit();
+
+        if (mTwoPane) {
+            RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(mRecipeId, 0);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.step_fragment_container, recipeStepFragment)
+                    .commit();
+        }
     }
 
     private void missingRecipeID() {
         Toast toast = Toast.makeText(this, "No recipe selected", Toast.LENGTH_SHORT);
         toast.show();
         finish();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
