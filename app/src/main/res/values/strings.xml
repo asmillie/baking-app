@@ -7,4 +7,9 @@
     <!-- Recipe Instructions -->
     <string name="ingredients_lv_header">Ingredients</string>
     <string name="recipe_steps_header">Recipe Steps</string>
+    <string name="appwidget_text">EXAMPLE</string>
+
+    <!-- Recipe Ingredients Widget -->
+    <string name="add_widget">Add widget</string>
+    <string name="ingredients">Ingredients</string>
 </resources>
