@@ -199,12 +199,9 @@ public class RecipeStepFragment extends Fragment {
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
-
+            //TODO Surface View recommended for video
             mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
             mVideoPlayerView.setPlayer(mVideoPlayer);
-            mVideoPlayerView.setUseController(true);
-            mVideoPlayerView.setControllerHideOnTouch(false);
-            mVideoPlayerView.setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS);
         }
     }
 

@@ -12,7 +12,7 @@
     <!-- fragment_instructions.xml -->
     <dimen name="ingredient_lv_padding">8dp</dimen>
     <dimen name="ingredient_list_item_text_size">16sp</dimen>
-    <dimen name="ingredient_lv_margin_left">8dp</dimen>
+    <dimen name="fragment_instructions_list_left_margin">8dp</dimen>
     <dimen name="recipe_instructions_header_margin">8dp</dimen>
 
 </resources>
