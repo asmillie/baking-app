@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -175,12 +176,13 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
         List<String> ingredientList = new ArrayList<>();
         if (mIngredients != null && mIngredients.size() > 0) {
             for (Ingredient ingredient: mIngredients) {
+
                 ingredientList.add(ingredient.toString());
             }
             Log.d(TAG, "Ingredients list built and ready for adapter");
         }
 
-        mIngredientsAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, ingredientList);
+        mIngredientsAdapter = new ArrayAdapter<>(mContext, R.layout.ingredient_list_item, ingredientList);
         mIngredientsListView.setAdapter(mIngredientsAdapter);
     }
 

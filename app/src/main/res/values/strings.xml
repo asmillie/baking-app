@@ -3,4 +3,8 @@
 
     <!-- Recipe List -->
     <string name="view_recipe_btn">View Recipe</string>
+
+    <!-- Recipe Instructions -->
+    <string name="ingredients_lv_header">Ingredients</string>
+    <string name="recipe_steps_header">Recipe Steps</string>
 </resources>

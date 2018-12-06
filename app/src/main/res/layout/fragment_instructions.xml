@@ -6,12 +6,31 @@
     android:orientation="vertical"
     tools:context=".ui.InstructionsFragment">
 
+        <TextView
+            android:text="@string/ingredients_lv_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_margin="@dimen/recipe_instructions_header_margin"/>
+
         <ListView
             android:id="@+id/ingredient_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp" />
+            android:padding="@dimen/ingredient_lv_padding"
+            android:layout_marginLeft="@dimen/ingredient_lv_margin_left"
+            android:layout_marginStart="@dimen/ingredient_lv_margin_left"
+            android:dividerHeight="0dp"
+            android:divider="@null"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/recipe_steps_header"
+            android:layout_margin="@dimen/recipe_instructions_header_margin"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/steps_rv"
