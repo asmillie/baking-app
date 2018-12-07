@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -42,7 +43,7 @@ class IngredientListRemoteViewsFactory implements RemoteViewsService.RemoteViews
 
     @Override
     public void onDataSetChanged() {
-
+        mRecipeList = mAppRepository.getRecipeNames().getValue();
     }
 
     @Override
@@ -58,14 +59,24 @@ class IngredientListRemoteViewsFactory implements RemoteViewsService.RemoteViews
 
     @Override
     public RemoteViews getViewAt(int position) {
-        mRecipeList = mAppRepository.getRecipeNames().getValue();
+        if (mRecipeList == null || mRecipeList.size() == 0) {
+            return null;
+        }
 
-        //TODO Create list item xml file
-        //TODO Create remote views that inflates xml layout
-        //TODO Build layout with list items
-        //TODO Pending intents on list items to launch list of ingredients
+        Recipe recipe = mRecipeList.get(position);
 
-        return null;
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_list_item);
+        views.setTextViewText(R.id.recipe_name_tv, recipe.getName());
+
+        Bundle extras = new Bundle();
+        extras.putInt(Constants.RECIPE_ID_EXTRA, recipe.getId());
+
+        Intent intent = new Intent();
+        intent.putExtras(extras);
+
+        views.setOnClickFillInIntent(R.id.recipe_name_tv, intent);
+
+        return views;
     }
 
     @Override
@@ -80,7 +91,7 @@ class IngredientListRemoteViewsFactory implements RemoteViewsService.RemoteViews
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
