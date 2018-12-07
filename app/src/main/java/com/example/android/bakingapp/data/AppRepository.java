@@ -1,7 +1,7 @@
 package com.example.android.bakingapp.data;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 
@@ -26,7 +26,9 @@ public class AppRepository {
 
     private final RecipeService mRecipeService;
     private final AppDatabase mDatabase;
-    //TODO: Create AppDb and save json data to it
+
+    private final Context mContext;
+
     private AppRepository(Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -37,6 +39,7 @@ public class AppRepository {
         mRecipeService = retrofit.create(RecipeService.class);
 
         mDatabase = AppDatabase.getInstance(context);
+        mContext = context;
     }
 
     //Singleton instantiation of Repository, modified from AppDatabase.java
@@ -94,6 +97,7 @@ public class AppRepository {
                         saveRecipes(recipes);
                         saveIngredients(ingredientsAllRecipes);
                         saveSteps(stepsAllRecipes);
+
                         Log.d(TAG, "Recipes successfully retrieved from api and saved in db.");
                     }
 
@@ -158,7 +162,11 @@ public class AppRepository {
         return mDatabase.stepDao().getStepById(stepId);
     }
 
-    public LiveData<List<Recipe>> getRecipeNames() {
+    /**
+     * Returns list of recipes (names and ids only) for ingredients widget
+     * @return List of Recipes
+     */
+    public List<Recipe> getRecipeNames() {
         return mDatabase.recipeDao().getRecipeNames();
     }
 }

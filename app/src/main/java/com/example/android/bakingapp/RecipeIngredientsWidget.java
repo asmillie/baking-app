@@ -3,6 +3,8 @@ package com.example.android.bakingapp;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -10,13 +12,14 @@ import android.widget.RemoteViews;
  */
 public class RecipeIngredientsWidget extends AppWidgetProvider {
 
+    private static final String TAG = RecipeIngredientsWidget.class.getSimpleName();
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        RemoteViews views = getRecipeList(context);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -31,6 +34,16 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     }
 
     @Override
+    public void onReceive(Context context, Intent intent) {
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        if (intent.hasExtra(Constants.RECIPE_ID_EXTRA)) {
+            Integer recipeId = intent.getIntExtra(Constants.RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
+            Log.d(TAG, "Received intent with recipe id #" + recipeId);
+        }
+        super.onReceive(context, intent);
+    }
+
+    @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
     }
@@ -38,6 +51,22 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    /**
+     * Creates and returns the list of recipes
+     * @param context Application context
+     * @return RemoteViews containing recipes for a ListView
+     */
+    private static RemoteViews getRecipeList(Context context) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
+
+        Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+        views.setRemoteAdapter(R.id.recipe_list_lv, intent);
+        views.setEmptyView(R.id.recipe_list_lv, R.id.empty_view);
+        Log.d(TAG, "Setting adapter for recipe list as RecipeIngredientsWidgetService");
+
+        return views;
     }
 }
 

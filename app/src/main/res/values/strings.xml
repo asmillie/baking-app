@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">BakingApp</string>
 
+    <string name="ingredients">Ingredients</string>
+
     <!-- Recipe List -->
     <string name="view_recipe_btn">View Recipe</string>
 
     <!-- Recipe Instructions -->
     <string name="ingredients_lv_header">Ingredients</string>
     <string name="recipe_steps_header">Recipe Steps</string>
-    <string name="appwidget_text">EXAMPLE</string>
+
 
     <!-- Recipe Ingredients Widget -->
     <string name="add_widget">Add widget</string>
-    <string name="ingredients">Ingredients</string>
+    <string name="appwidget_text">Recipe Ingredients</string>
+    <string name="widget_empty_recipe_list">No Recipes Found</string>
+
 </resources>
