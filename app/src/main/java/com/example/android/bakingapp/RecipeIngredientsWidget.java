@@ -23,10 +23,16 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         //TODO Check SharedPrefs through Utils class to determine if recipe list or ingredients to be shown
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
-        RemoteViews views = getRecipeList(context);
+        RemoteViews views;
+        Integer recipeId = PreferenceUtils.getWidgetRecipeId(context, appWidgetId);
+        Log.d(TAG, "updateAppWidget: Preference utils retrieved recipe id #" + recipeId + " for widget id #" + appWidgetId);
+        if (recipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
+            views = getRecipeList(context, appWidgetId);
+            Log.d(TAG, "updateAppWidget: getRecipeList() called");
+        } else {
+            views = getIngredientList(context, appWidgetId, recipeId);
+            Log.d(TAG, "updateAppWidget: getIngredientList() called");
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -49,7 +55,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                 PreferenceUtils.saveWidgetRecipeId(context, appWidgetId, recipeId);
-                Log.d(TAG, "Received intent with recipe id #" + recipeId + " and saved it to prefs");
+                updateAppWidget(context, manager, appWidgetId);
             }
         }
         super.onReceive(context, intent);
@@ -78,7 +84,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
      * @param context Application context
      * @return RemoteViews containing recipes for a ListView
      */
-    private static RemoteViews getRecipeList(Context context) {
+    private static RemoteViews getRecipeList(Context context, int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipes);
 
         Intent intent = new Intent(context, RecipeWidgetService.class);
@@ -86,6 +92,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         views.setEmptyView(R.id.recipe_list_lv, R.id.empty_view);
 
         Intent selectRecipeIntent = new Intent(context, RecipeIngredientsWidget.class);
+        selectRecipeIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         selectRecipeIntent.setAction(Constants.WIDGET_SELECT_RECIPE_ACTION);
 
         PendingIntent selectRecipePendingIntent = PendingIntent.getBroadcast(context, 0, selectRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -94,10 +101,11 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         return views;
     }
 
-    private static RemoteViews getIngredientList(Context context, Integer recipeId) {
+    private static RemoteViews getIngredientList(Context context, int appWidgetId, Integer recipeId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredients);
 
         Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.putExtra(Constants.WIDGET_RECIPE_ID_EXTRA, recipeId);
 
         views.setRemoteAdapter(R.id.ingredients_lv, intent);

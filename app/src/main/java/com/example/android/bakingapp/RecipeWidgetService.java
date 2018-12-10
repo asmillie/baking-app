@@ -45,9 +45,7 @@ class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public void onDataSetChanged() {
-        Log.d(TAG, "onDataSetChanged called, getting recipe list");
         mRecipeList = mAppRepository.getRecipeNames();
-        Log.d(TAG, "Recipe List contains " + getCount() + " items");
     }
 
     @Override
@@ -64,10 +62,9 @@ class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     @Override
     public RemoteViews getViewAt(int position) {
         if (getCount() == 0) {
-            Log.d(TAG, "Recipe List Empty, returning a null RemoteViews object");
             return null;
         }
-        Log.d(TAG, "Building remote view from recipe list item @ position #" + position);
+
         Recipe recipe = mRecipeList.get(position);
 
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_list_item);

@@ -23,7 +23,7 @@
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/widget_empty_recipe_list"
+        android:text="@string/widget_empty_ingredient_list"
         android:visibility="gone"/>
 
 </LinearLayout>

@@ -33,6 +33,7 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mRecipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
+        Log.d(TAG, "Created RVFactory for Recipe ID #" + mRecipeId);
     }
 
     @Override
@@ -45,6 +46,7 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
         if (!mRecipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
             mIngredientList = mAppRepository.getIngredientListByRecipeId(mRecipeId);
         }
+        Log.d(TAG, "onDataSetChanged: Ingredient List contains " + getCount() + " items");
     }
 
     @Override
