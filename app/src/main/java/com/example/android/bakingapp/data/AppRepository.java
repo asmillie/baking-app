@@ -169,4 +169,13 @@ public class AppRepository {
     public List<Recipe> getRecipeNames() {
         return mDatabase.recipeDao().getRecipeNames();
     }
+
+    /**
+     * Returns list of ingredients for a recipe for ingredients widget
+     * @param recipeId The id of the recipe to get ingredients list for
+     * @return List of ingredients
+     */
+    public List<Ingredient> getIngredientListByRecipeId(Integer recipeId) {
+        return mDatabase.ingredientDao().getIngredientListByRecipeId(recipeId);
+    }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.RemoteViewsService;
 
 /**
  * Implementation of App Widget functionality.
@@ -17,6 +18,8 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
+
+        //TODO Check SharedPrefs through Utils class to determine if recipe list or ingredients to be shown
 
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
@@ -40,6 +43,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         if (intent.getAction().equals(Constants.WIDGET_SELECT_RECIPE_ACTION)) {
             Integer recipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
             Log.d(TAG, "Received intent with recipe id #" + recipeId);
+            //TODO Save WidgetID & RecipeID to SharedPrefs
         }
         super.onReceive(context, intent);
     }
@@ -71,6 +75,18 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         PendingIntent selectRecipePendingIntent = PendingIntent.getBroadcast(context, 0, selectRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.recipe_list_lv, selectRecipePendingIntent);
+
+        return views;
+    }
+
+    private static RemoteViews getIngredientList(Context context) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredients);
+
+        Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+        views.setRemoteAdapter(R.id.ingredients_lv, intent);
+        views.setEmptyView(R.id.ingredients_lv, R.id.empty_view);
+
+        //TODO: Fill-in & Pending Intent for back button
 
         return views;
     }
