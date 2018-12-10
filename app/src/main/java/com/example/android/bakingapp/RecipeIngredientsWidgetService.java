@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -20,14 +21,18 @@ public class RecipeIngredientsWidgetService extends RemoteViewsService {
 
 class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private int mAppWidgetId;
+    private static final String TAG = IngredientsListRemoteViewsFactory.class.getSimpleName();
+
+    private final int mAppWidgetId;
     private AppRepository mAppRepository;
+    private final Integer mRecipeId;
     private List<Ingredient> mIngredientList;
-    private Context mContext;
+    private final Context mContext;
 
     IngredientsListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        mRecipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
     }
 
     @Override
@@ -37,22 +42,37 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public void onDataSetChanged() {
-
+        if (!mRecipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
+            mIngredientList = mAppRepository.getIngredientListByRecipeId(mRecipeId);
+        }
     }
 
     @Override
     public void onDestroy() {
-
+        mIngredientList = null;
+        mAppRepository = null;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mIngredientList != null ? mIngredientList.size() : 0;
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        return null;
+        if (getCount() == 0) {
+            Log.d(TAG, "Ingredients list empty, return null remoteviews object");
+            return null;
+        }
+
+        Ingredient ingredient = mIngredientList.get(position);
+
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredient_list_item);
+        views.setTextViewText(R.id.measure_tv, ingredient.getMeasure());
+        views.setTextViewText(R.id.quantity_tv, ingredient.getQuantity() + "");
+        views.setTextViewText(R.id.ingredient_tv, ingredient.getIngredient());
+
+        return views;
     }
 
     @Override
@@ -62,12 +82,12 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override

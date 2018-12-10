@@ -79,10 +79,12 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         return views;
     }
 
-    private static RemoteViews getIngredientList(Context context) {
+    private static RemoteViews getIngredientList(Context context, Integer recipeId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredients);
 
         Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+        intent.putExtra(Constants.WIDGET_RECIPE_ID_EXTRA, recipeId);
+
         views.setRemoteAdapter(R.id.ingredients_lv, intent);
         views.setEmptyView(R.id.ingredients_lv, R.id.empty_view);
 

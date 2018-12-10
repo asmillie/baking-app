@@ -63,7 +63,7 @@ class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public RemoteViews getViewAt(int position) {
-        if (mRecipeList == null || mRecipeList.size() == 0) {
+        if (getCount() == 0) {
             Log.d(TAG, "Recipe List Empty, returning a null RemoteViews object");
             return null;
         }
