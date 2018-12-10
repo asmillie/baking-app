@@ -1,16 +1,9 @@
 package com.example.android.bakingapp;
 
 import android.appwidget.AppWidgetManager;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -24,23 +17,23 @@ import java.util.List;
  * Implemented following example
  * @ https://android.googlesource.com/platform/development/+/master/samples/StackWidget/src/com/example/android/stackwidget/StackWidgetService.java
  */
-public class RecipeIngredientsWidgetService extends RemoteViewsService {
+public class RecipeWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new IngredientListRemoteViewsFactory(this.getApplicationContext(), intent);
+        return new RecipeListRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }
 
-class IngredientListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private static final String TAG = IngredientListRemoteViewsFactory.class.getSimpleName();
+    private static final String TAG = RecipeListRemoteViewsFactory.class.getSimpleName();
 
     private Context mContext;
     private int mAppWidgetId;
     private AppRepository mAppRepository;
     private List<Recipe> mRecipeList;
 
-    IngredientListRemoteViewsFactory(Context context, Intent intent) {
+    RecipeListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
     }

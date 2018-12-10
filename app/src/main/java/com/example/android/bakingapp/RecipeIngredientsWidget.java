@@ -62,7 +62,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     private static RemoteViews getRecipeList(Context context) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
 
-        Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
+        Intent intent = new Intent(context, RecipeWidgetService.class);
         views.setRemoteAdapter(R.id.recipe_list_lv, intent);
         views.setEmptyView(R.id.recipe_list_lv, R.id.empty_view);
 
