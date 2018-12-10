@@ -60,7 +60,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
      * @return RemoteViews containing recipes for a ListView
      */
     private static RemoteViews getRecipeList(Context context) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipes);
 
         Intent intent = new Intent(context, RecipeWidgetService.class);
         views.setRemoteAdapter(R.id.recipe_list_lv, intent);
