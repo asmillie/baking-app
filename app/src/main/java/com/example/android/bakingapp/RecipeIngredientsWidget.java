@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -36,8 +37,8 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        if (intent.hasExtra(Constants.RECIPE_ID_EXTRA)) {
-            Integer recipeId = intent.getIntExtra(Constants.RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
+        if (intent.getAction().equals(Constants.WIDGET_SELECT_RECIPE_ACTION)) {
+            Integer recipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
             Log.d(TAG, "Received intent with recipe id #" + recipeId);
         }
         super.onReceive(context, intent);
@@ -64,7 +65,12 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
         views.setRemoteAdapter(R.id.recipe_list_lv, intent);
         views.setEmptyView(R.id.recipe_list_lv, R.id.empty_view);
-        Log.d(TAG, "Setting adapter for recipe list as RecipeIngredientsWidgetService");
+
+        Intent selectRecipeIntent = new Intent(context, RecipeIngredientsWidget.class);
+        selectRecipeIntent.setAction(Constants.WIDGET_SELECT_RECIPE_ACTION);
+
+        PendingIntent selectRecipePendingIntent = PendingIntent.getBroadcast(context, 0, selectRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.recipe_list_lv, selectRecipePendingIntent);
 
         return views;
     }

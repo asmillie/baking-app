@@ -81,7 +81,7 @@ class IngredientListRemoteViewsFactory implements RemoteViewsService.RemoteViews
         views.setTextViewText(R.id.recipe_name_tv, recipe.getName());
 
         Bundle extras = new Bundle();
-        extras.putInt(Constants.RECIPE_ID_EXTRA, recipe.getId());
+        extras.putInt(Constants.WIDGET_RECIPE_ID_EXTRA, recipe.getId());
 
         Intent intent = new Intent();
         intent.putExtras(extras);
