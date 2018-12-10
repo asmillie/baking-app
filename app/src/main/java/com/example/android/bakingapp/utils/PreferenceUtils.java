@@ -22,6 +22,13 @@ public class PreferenceUtils {
         editor.apply();
     }
 
+    public static void deleteWidgetRecipeId(Context context, int widgetId) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(getWidgetPrefKey(widgetId));
+        editor.apply();
+    }
+
     private static String getWidgetPrefKey(int widgetId) {
         return Constants.WIDGET_RECIPE_ID_EXTRA + "." + widgetId;
     }

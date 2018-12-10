@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -62,6 +63,14 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int x=0; x < appWidgetIds.length; x++) {
+            PreferenceUtils.deleteWidgetRecipeId(context, appWidgetIds[x]);
+        }
+        super.onDeleted(context, appWidgetIds);
     }
 
     /**
