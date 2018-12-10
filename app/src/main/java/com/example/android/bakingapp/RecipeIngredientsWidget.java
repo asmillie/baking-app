@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.android.bakingapp.utils.PreferenceUtils;
+
 /**
  * Implementation of App Widget functionality.
  */
@@ -41,9 +43,13 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         if (intent.getAction().equals(Constants.WIDGET_SELECT_RECIPE_ACTION)) {
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             Integer recipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
-            Log.d(TAG, "Received intent with recipe id #" + recipeId);
-            //TODO Save WidgetID & RecipeID to SharedPrefs
+
+            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                PreferenceUtils.saveWidgetRecipeId(context, appWidgetId, recipeId);
+                Log.d(TAG, "Received intent with recipe id #" + recipeId + " and saved it to prefs");
+            }
         }
         super.onReceive(context, intent);
     }
