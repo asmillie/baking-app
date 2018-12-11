@@ -26,7 +26,6 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
     private final int mAppWidgetId;
     private AppRepository mAppRepository;
     private final Integer mRecipeId;
-    private String mRecipeName;
     private List<Ingredient> mIngredientList;
     private final Context mContext;
 

@@ -16,7 +16,7 @@ public class RecipeAndInstructions {
     @Relation(parentColumn = "id", entityColumn = "recipe_id", entity = Step.class)
     public List<Step> steps;
 
-    RecipeAndInstructions() {}
+    public RecipeAndInstructions() {}
 
     public Recipe getRecipe() {
         return recipe;
