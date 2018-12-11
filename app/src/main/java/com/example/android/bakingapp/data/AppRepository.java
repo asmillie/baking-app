@@ -162,8 +162,12 @@ public class AppRepository {
         return mDatabase.stepDao().getStepById(stepId);
     }
 
+    /*
+     * Methods for Ingredients Widget
+     */
+
     /**
-     * Returns list of recipes (names and ids only) for ingredients widget
+     * Returns list of recipes (names and ids only)
      * @return List of Recipes
      */
     public List<Recipe> getRecipeNames() {
@@ -171,7 +175,16 @@ public class AppRepository {
     }
 
     /**
-     * Returns list of ingredients for a recipe for ingredients widget
+     * Returns recipe name
+     * @param recipeId Id of recipe to get
+     * @return Recipe object
+     */
+    public Recipe getRecipeNameById(Integer recipeId) {
+        return mDatabase.recipeDao().getRecipeNameById(recipeId);
+    }
+
+    /**
+     * Returns list of ingredients for a recipe
      * @param recipeId The id of the recipe to get ingredients list for
      * @return List of ingredients
      */
