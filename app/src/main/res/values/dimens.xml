@@ -21,8 +21,8 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_recipe_list_text_size">24sp</dimen>
-    <dimen name="widget_ingredient_quantity_width">40dp</dimen>
+    <dimen name="widget_ingredient_quantity_width">50dp</dimen>
     <dimen name="widget_ingredient_measure_width">50dp</dimen>
-    <dimen name="widget_ingredient_item_padding_right">8dp</dimen>
+    <dimen name="widget_ingredient_measure_margin_horiz">8dp</dimen>
 
 </resources>

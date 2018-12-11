@@ -9,17 +9,17 @@
         android:id="@+id/quantity_tv"
         android:layout_width="@dimen/widget_ingredient_quantity_width"
         android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:paddingRight="@dimen/widget_ingredient_item_padding_right"
-        android:paddingEnd="@dimen/widget_ingredient_item_padding_right"
-        tools:text="600"/>
+        android:gravity="end"
+        tools:text="600.00"/>
 
     <TextView
         android:id="@+id/measure_tv"
         android:layout_width="@dimen/widget_ingredient_measure_width"
         android:layout_height="match_parent"
-        android:paddingRight="@dimen/widget_ingredient_item_padding_right"
-        android:paddingEnd="@dimen/widget_ingredient_item_padding_right"
+        android:layout_marginRight="@dimen/widget_ingredient_measure_margin_horiz"
+        android:layout_marginEnd="@dimen/widget_ingredient_measure_margin_horiz"
+        android:layout_marginLeft="@dimen/widget_ingredient_measure_margin_horiz"
+        android:layout_marginStart="@dimen/widget_ingredient_measure_margin_horiz"
         tools:text="TBLSP"/>
 
     <TextView
