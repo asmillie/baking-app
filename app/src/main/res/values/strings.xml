@@ -15,5 +15,6 @@
     <string name="appwidget_text">Recipe Ingredients</string>
     <string name="widget_empty_recipe_list">No Recipes Found</string>
     <string name="widget_empty_ingredient_list">No Ingredients Found</string>
+    <string name="no_video_found">No Video Found</string>
 
 </resources>

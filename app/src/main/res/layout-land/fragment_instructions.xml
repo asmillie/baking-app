@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/ingredients_header_tv"
+        android:text="@string/ingredients_lv_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/recipe_instructions_header_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/recipe_steps_header"/>
+
+    <ListView
+        android:id="@+id/ingredient_lv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="@dimen/ingredient_lv_padding"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        app:layout_constraintTop_toBottomOf="@id/ingredients_header_tv"
+        app:layout_constraintLeft_toLeftOf="@id/ingredients_header_tv"
+        app:layout_constraintRight_toLeftOf="@id/steps_rv"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/recipe_steps_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/recipe_steps_header"
+        android:layout_margin="@dimen/recipe_instructions_header_margin"
+        app:layout_constraintLeft_toRightOf="@id/ingredients_header_tv"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/steps_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/recipe_steps_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/recipe_steps_header"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

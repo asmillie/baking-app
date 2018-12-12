@@ -1,20 +1,13 @@
 package com.example.android.bakingapp.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.data.Step;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class RecipeStepActivity extends AppCompatActivity {
 

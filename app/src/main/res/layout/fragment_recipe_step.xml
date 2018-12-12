@@ -13,9 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="250dp"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/video_player_margin"
         app:resize_mode="fixed_width"
         app:show_buffering="always"/>
+
+    <TextView
+        android:id="@+id/empty_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_video_found"
+        android:layout_margin="@dimen/video_player_margin"
+        android:textSize="@dimen/empty_video_text_size"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,9 +34,9 @@
             android:id="@+id/step_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/video_player_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textSize="24sp"/>
+            android:textSize="@dimen/recipe_step_text_size"/>
     </ScrollView>
 
 </LinearLayout>

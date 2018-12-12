@@ -45,12 +45,10 @@ public class RecipeStepFragment extends Fragment {
 
     private RecipeInstructionsViewModel mViewModel;
     private SimpleExoPlayer mVideoPlayer;
-    private static MediaSessionCompat mMediaSession;
-
-    //private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.step_description) TextView mStepDesc;
     @BindView(R.id.recipe_step_video) PlayerView mVideoPlayerView;
+    @BindView(R.id.empty_video_view) TextView mEmptyVideoView;
 
     private Unbinder unbinder;
 
@@ -95,30 +93,10 @@ public class RecipeStepFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         initViewModel();
-        initVideoPlayer();
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-*/
     @Override
     public void onDetach() {
         super.onDetach();
@@ -134,23 +112,12 @@ public class RecipeStepFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        if (mVideoPlayer != null) {
+            mVideoPlayer.stop();
+            mVideoPlayer.release();
+            mVideoPlayer = null;
+        }
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    } */
 
     private void initViewModel() {
         if (mRecipeId != null) {
@@ -172,6 +139,7 @@ public class RecipeStepFragment extends Fragment {
         if (mStep != null) {
             String stepDesc = mStep.getDescription();
             String stepShortDesc = mStep.getShortDescription();
+            String videoUrl = mStep.getVideoURL();
 
             if (stepDesc == null || stepDesc.equals("")) {
                 mStepDesc.setText("No description found");
@@ -179,11 +147,18 @@ public class RecipeStepFragment extends Fragment {
                 mStepDesc.setText(stepDesc);
             }
 
-            if (mVideoPlayer == null) {
-                initVideoPlayer();
-            }
+            if (videoUrl != null && !videoUrl.equals("")) {
+                mEmptyVideoView.setVisibility(View.GONE);
+                mVideoPlayerView.setVisibility(View.VISIBLE);
+                if (mVideoPlayer == null) {
+                    initVideoPlayer();
+                }
 
-            loadMedia(getStepVideoUri());
+                loadMedia(getStepVideoUri(videoUrl));
+            } else {
+                mVideoPlayerView.setVisibility(View.GONE);
+                mEmptyVideoView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -199,7 +174,7 @@ public class RecipeStepFragment extends Fragment {
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
-            //TODO Surface View recommended for video
+
             mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
             mVideoPlayerView.setPlayer(mVideoPlayer);
         }
@@ -220,11 +195,10 @@ public class RecipeStepFragment extends Fragment {
         }
     }
 
-    private Uri getStepVideoUri() {
-        String videoUrl = mStep.getVideoURL();
+    private Uri getStepVideoUri(String videoUrl) {
         Log.d(TAG, "Creating video url for " + videoUrl);
         Uri uri = null;
-        if (videoUrl != null) {
+        if (videoUrl != null && !videoUrl.equals("")) {
             uri = Uri.parse(videoUrl);
         }
         return uri;
