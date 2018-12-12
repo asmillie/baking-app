@@ -1,29 +1,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#09C"
+    android:orientation="horizontal"
+    android:background="@color/colorAccent"
     android:padding="@dimen/widget_margin">
 
-    <!-- TODO: Back button -->
+    <ImageView
+        android:id="@+id/back_btn"
+        android:src="@drawable/chevron_left"
+        android:layout_width="20dp"
+        android:layout_height="match_parent" />
 
-    <ListView
-        android:id="@+id/ingredients_lv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="@dimen/widget_recipe_list_text_size"
-        android:textStyle="bold|italic" />
-
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/widget_empty_ingredient_list"
-        android:visibility="gone"/>
+        android:orientation="vertical"
+        android:background="@android:color/holo_blue_light">
 
+        <TextView
+            android:id="@+id/recipe_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/widget_ingredient_list_header_text_size"
+            android:layout_marginLeft="@dimen/widget_ingredient_list_header_margin"
+            android:layout_marginRight="@dimen/recipe_instructions_header_margin"/>
+
+        <!-- TODO: Back button -->
+
+        <ListView
+            android:id="@+id/ingredients_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/appwidget_text"
+            android:text="@string/appwidget_text"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/widget_recipe_list_text_size"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/widget_empty_ingredient_list"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 </LinearLayout>

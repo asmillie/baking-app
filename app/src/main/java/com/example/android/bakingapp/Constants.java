@@ -23,6 +23,12 @@ public class Constants {
     public static final Integer SELECTED_STEP_ID_DEFAULT = 0;
 
     /** Widget Extras **/
-    public static final String WIDGET_SELECT_RECIPE_ACTION = APP_BASE_URI + ".SELECT_RECIPE_ACTION";
-    public static final String WIDGET_RECIPE_ID_EXTRA = APP_BASE_URI + ".RECIPE_ID";
+    private static final String WIDGET_ACTION_PREFIX = ".WIDGET_ACTION.";
+    private static final String WIDGET_EXTRA_PREFIX = ".WIDGET_EXTRA.";
+
+    public static final String WIDGET_GET_RECIPES_ACTION = WIDGET_ACTION_PREFIX + "GET_RECIPES";
+    public static final String WIDGET_GET_INGREDIENTS_ACTION = WIDGET_ACTION_PREFIX + "GET_INGREDIENTS";
+
+    public static final String WIDGET_RECIPE_ID_EXTRA = WIDGET_EXTRA_PREFIX + "RECIPE_ID";
+    public static final String WIDGET_RECIPE_NAME_EXTRA = WIDGET_EXTRA_PREFIX + "RECIPE_NAME";
 }

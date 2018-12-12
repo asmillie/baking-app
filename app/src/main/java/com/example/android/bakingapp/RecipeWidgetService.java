@@ -72,11 +72,12 @@ class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
         Bundle extras = new Bundle();
         extras.putInt(Constants.WIDGET_RECIPE_ID_EXTRA, recipe.getId());
+        extras.putString(Constants.WIDGET_RECIPE_NAME_EXTRA, recipe.getName());
 
         Intent intent = new Intent();
         intent.putExtras(extras);
 
-        views.setOnClickFillInIntent(R.id.recipe_name_tv, intent);
+        views.setOnClickFillInIntent(R.id.recipe_list_item, intent);
 
         return views;
     }

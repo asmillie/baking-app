@@ -5,11 +5,8 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
-
 import com.example.android.bakingapp.utils.PreferenceUtils;
 
 /**
@@ -22,7 +19,6 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        //TODO Check SharedPrefs through Utils class to determine if recipe list or ingredients to be shown
         RemoteViews views;
         Integer recipeId = PreferenceUtils.getWidgetRecipeId(context, appWidgetId);
         Log.d(TAG, "updateAppWidget: Preference utils retrieved recipe id #" + recipeId + " for widget id #" + appWidgetId);
@@ -49,12 +45,22 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        if (intent.getAction().equals(Constants.WIDGET_SELECT_RECIPE_ACTION)) {
-            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-            Integer recipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
+        final String action = intent.getAction();
+        if (action.equals(Constants.WIDGET_GET_INGREDIENTS_ACTION)) {
+            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            final Integer recipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
+            final String recipeName = intent.getStringExtra(Constants.WIDGET_RECIPE_NAME_EXTRA);
 
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                 PreferenceUtils.saveWidgetRecipeId(context, appWidgetId, recipeId);
+                PreferenceUtils.saveWidgetRecipeName(context, appWidgetId, recipeName);
+                updateAppWidget(context, manager, appWidgetId);
+            }
+        } else if (action.equals(Constants.WIDGET_GET_RECIPES_ACTION)) {
+            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                PreferenceUtils.deleteWidgetRecipeId(context, appWidgetId);
+                PreferenceUtils.deleteWidgetRecipeName(context, appWidgetId);
                 updateAppWidget(context, manager, appWidgetId);
             }
         }
@@ -75,6 +81,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         for (int x=0; x < appWidgetIds.length; x++) {
             PreferenceUtils.deleteWidgetRecipeId(context, appWidgetIds[x]);
+            PreferenceUtils.deleteWidgetRecipeName(context, appWidgetIds[x]);
         }
         super.onDeleted(context, appWidgetIds);
     }
@@ -93,7 +100,7 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
         Intent selectRecipeIntent = new Intent(context, RecipeIngredientsWidget.class);
         selectRecipeIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        selectRecipeIntent.setAction(Constants.WIDGET_SELECT_RECIPE_ACTION);
+        selectRecipeIntent.setAction(Constants.WIDGET_GET_INGREDIENTS_ACTION);
 
         PendingIntent selectRecipePendingIntent = PendingIntent.getBroadcast(context, 0, selectRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.recipe_list_lv, selectRecipePendingIntent);
@@ -103,15 +110,23 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
     private static RemoteViews getIngredientList(Context context, int appWidgetId, Integer recipeId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredients);
-
+        //Get and assign recipe name
+        String recipeName = PreferenceUtils.getRecipeNameByWidgetId(context, appWidgetId);
+        views.setTextViewText(R.id.recipe_name_tv, recipeName);
+        //Setup intent for back button
+        Intent backIntent = new Intent(context, RecipeIngredientsWidget.class);
+        backIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        backIntent.setAction(Constants.WIDGET_GET_RECIPES_ACTION);
+        //Assign back button with pending intent
+        PendingIntent backPendingIntent = PendingIntent.getBroadcast(context, 0, backIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.back_btn, backPendingIntent);
+        //Setup ingredient list item adapter (RemoteViewsFactory)
         Intent intent = new Intent(context, RecipeIngredientsWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.putExtra(Constants.WIDGET_RECIPE_ID_EXTRA, recipeId);
-
         views.setRemoteAdapter(R.id.ingredients_lv, intent);
-        views.setEmptyView(R.id.ingredients_lv, R.id.empty_view);
 
-        //TODO: Fill-in & Pending Intent for back button
+        views.setEmptyView(R.id.ingredients_lv, R.id.empty_view);
 
         return views;
     }
