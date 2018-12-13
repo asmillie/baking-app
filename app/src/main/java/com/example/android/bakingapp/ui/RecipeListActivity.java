@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.Constants;
@@ -33,6 +34,8 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
 
     @BindView(R.id.recipe_list_rv)
     RecyclerView mRecipeListRV;
+
+    @BindView(R.id.empty_view) TextView mEmptyView;
 
 
     @Override
@@ -67,7 +70,12 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
-                mAdapter.setRecipeList(recipes);
+                if (recipes == null || recipes.size() == 0) {
+                    showEmptyView();
+                } else {
+                    mAdapter.setRecipeList(recipes);
+                    showRecipeList();
+                }
             }
         });
     }
@@ -86,6 +94,16 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
 
         mRecipeListRV.setLayoutManager(layoutManager);
         mRecipeListRV.setAdapter(mAdapter);
+    }
+
+    private void showEmptyView() {
+        mRecipeListRV.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void showRecipeList() {
+        mRecipeListRV.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override

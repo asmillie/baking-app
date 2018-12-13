@@ -5,16 +5,18 @@
 
     <!-- Recipe List -->
     <string name="view_recipe_btn">View Recipe</string>
+    <string name="empty_recipe_list">No recipes found</string>
 
     <!-- Recipe Instructions -->
     <string name="ingredients_lv_header">Ingredients</string>
     <string name="recipe_steps_header">Recipe Steps</string>
+    <string name="no_video_found">No Video Found</string>
 
     <!-- Widget -->
     <string name="add_widget">Add widget</string>
     <string name="appwidget_text">Recipe Ingredients</string>
     <string name="widget_empty_recipe_list">No Recipes Found</string>
     <string name="widget_empty_ingredient_list">No Ingredients Found</string>
-    <string name="no_video_found">No Video Found</string>
+
 
 </resources>

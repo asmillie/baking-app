@@ -4,9 +4,11 @@ import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.android.bakingapp.AppExecutors;
 import com.example.android.bakingapp.Constants;
+import com.example.android.bakingapp.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,21 +59,19 @@ public class AppRepository {
         //TODO: Trigger refreshRecipes by some metric (ie. last_updated), which will
         //update the database after contacting the server for fresh data. This method
         //will then always return from the database.
-        if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0)
+
+        if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0) {
             refreshRecipes();
+        }
 
         return recipes;
     }
 
-    public LiveData<List<RecipeAndInstructions>> getRecipesAndInstructionsById(Integer recipeId) {
-        LiveData<List<RecipeAndInstructions>> recipes = mDatabase.recipeAndInstructionsDao().getRecipeAndInstructionsById(recipeId);
-        if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0)
-            refreshRecipes();
+    private void refreshRecipes() {
+        if (!NetworkUtils.isConnected(mContext)) {
+            return;
+        }
 
-        return recipes;
-    }
-
-    public void refreshRecipes() {
         mRecipeService.listRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
