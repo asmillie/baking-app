@@ -65,7 +65,7 @@ class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
             return null;
         }
 
-        Recipe recipe = mRecipeList.get(position);
+        final Recipe recipe = mRecipeList.get(position);
 
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_recipe_list_item);
         views.setTextViewText(R.id.recipe_name_tv, recipe.getName());
