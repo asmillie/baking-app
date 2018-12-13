@@ -88,7 +88,6 @@ public class RecipeStepFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
-            initViewModel();
         }
     }
 
@@ -104,6 +103,8 @@ public class RecipeStepFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        initViewModel();
+
         return view;
     }
 
@@ -117,8 +118,8 @@ public class RecipeStepFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         unbinder.unbind();
         releaseVideoPlayer();
     }
@@ -155,15 +156,8 @@ public class RecipeStepFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable Step step) {
                         Log.d(TAG, "observed changed to step");
-                        if (step != null) {
-                            int currentStepId = mStep.getId();
-                            int newStepId = step.getId();
-                            if (currentStepId != newStepId) {
-                                Log.d(TAG, "Observed step replacing old step");
-                                mStep = step;
-                                populateUI();
-                            }
-                        }
+                        mStep = step;
+                        populateUI();
                     }
                 });
             }

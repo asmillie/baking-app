@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 
 public class RecipeStepActivity extends AppCompatActivity {
+
+    private static final String TAG = RecipeStepActivity.class.getSimpleName();
 
     private RecipeInstructionsViewModel mViewModel;
 
@@ -31,15 +34,15 @@ public class RecipeStepActivity extends AppCompatActivity {
 
         initViewModel(recipeId, stepId);
 
-        RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(recipeId);
-        recipeStepFragment.setStepId(stepId);
+        if (savedInstanceState == null) {
+            RecipeStepFragment recipeStepFragment = RecipeStepFragment.newInstance(recipeId);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.recipe_step_fragment_container, recipeStepFragment)
-                .commit();
-
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_fragment_container, recipeStepFragment)
+                    .commit();
+        }
     }
 
     private void initViewModel(Integer recipeId, Integer stepId) {
