@@ -22,6 +22,9 @@ public class Constants {
     /** Default step Id **/
     public static final Integer SELECTED_STEP_ID_DEFAULT = 0;
 
+    /** Recipe Step Video **/
+    public static final String PLAYER_POSITION_EXTRA = "video-position";
+
     /** Widget Extras **/
     private static final String WIDGET_ACTION_PREFIX = ".WIDGET_ACTION.";
     private static final String WIDGET_EXTRA_PREFIX = ".WIDGET_EXTRA.";

@@ -1,10 +1,14 @@
 package com.example.android.bakingapp.ui;
 
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -16,10 +20,12 @@ import android.widget.TextView;
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.Step;
+import com.example.android.bakingapp.utils.NetworkUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -34,7 +40,10 @@ import com.google.android.exoplayer2.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
+/*
+Solution to player position on rotation found
+@ https://stackoverflow.com/questions/45481775/exoplayer-restore-state-when-resumed?noredirect=1&lq=1
+ */
 public class RecipeStepFragment extends Fragment {
 
     private static final String TAG = RecipeStepFragment.class.getSimpleName();
@@ -45,6 +54,7 @@ public class RecipeStepFragment extends Fragment {
 
     private RecipeInstructionsViewModel mViewModel;
     private SimpleExoPlayer mVideoPlayer;
+    private long mPlayerPosition;
 
     @BindView(R.id.step_description) TextView mStepDesc;
     @BindView(R.id.recipe_step_video) PlayerView mVideoPlayerView;
@@ -78,6 +88,7 @@ public class RecipeStepFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
+            initViewModel();
         }
     }
 
@@ -87,31 +98,38 @@ public class RecipeStepFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
+            mPlayerPosition = savedInstanceState.getLong(Constants.PLAYER_POSITION_EXTRA);
         }
 
         View view = inflater.inflate(R.layout.fragment_recipe_step, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        initViewModel();
-
         return view;
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        //mListener = null;
+    public void onPause() {
+        super.onPause();
         if (mVideoPlayer != null) {
-            mVideoPlayer.stop();
-            mVideoPlayer.release();
-            mVideoPlayer = null;
+            mPlayerPosition = mVideoPlayer.getCurrentPosition();
+            releaseVideoPlayer();
         }
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         unbinder.unbind();
+        releaseVideoPlayer();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(Constants.PLAYER_POSITION_EXTRA, mPlayerPosition);
+    }
+
+    private void releaseVideoPlayer() {
         if (mVideoPlayer != null) {
             mVideoPlayer.stop();
             mVideoPlayer.release();
@@ -121,21 +139,39 @@ public class RecipeStepFragment extends Fragment {
 
     private void initViewModel() {
         if (mRecipeId != null) {
-            RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
+            Application application = new Application();
+            try {
+                application = getActivity().getApplication();
+            } catch (NullPointerException e) {
+                Log.e(TAG, "Error getting activity application: " + e.toString());
+            }
 
-            mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
+            if (application != null) {
+                RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(application, mRecipeId);
 
-            mViewModel.getStep().observe(this, new Observer<Step>() {
-                @Override
-                public void onChanged(@Nullable Step step) {
-                    mStep = step;
-                    populateUI();
-                }
-            });
+                mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
+
+                mViewModel.getStep().observe(this, new Observer<Step>() {
+                    @Override
+                    public void onChanged(@Nullable Step step) {
+                        Log.d(TAG, "observed changed to step");
+                        if (step != null) {
+                            int currentStepId = mStep.getId();
+                            int newStepId = step.getId();
+                            if (currentStepId != newStepId) {
+                                Log.d(TAG, "Observed step replacing old step");
+                                mStep = step;
+                                populateUI();
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 
     private void populateUI() {
+        Log.d(TAG, "Populating UI");
         if (mStep != null) {
             String stepDesc = mStep.getDescription();
             String stepShortDesc = mStep.getShortDescription();
@@ -147,14 +183,22 @@ public class RecipeStepFragment extends Fragment {
                 mStepDesc.setText(stepDesc);
             }
 
-            if (videoUrl != null && !videoUrl.equals("")) {
+            boolean isConnected = false;
+            try {
+                if (NetworkUtils.isConnected(getActivity().getApplicationContext())) {
+                    isConnected = true;
+                }
+            } catch (NullPointerException e) {
+                Log.e(TAG, "Error checking network connectivity: " + e.toString());
+            }
+
+            if (isConnected && videoUrl != null && !videoUrl.equals("")) {
                 mEmptyVideoView.setVisibility(View.GONE);
                 mVideoPlayerView.setVisibility(View.VISIBLE);
-                if (mVideoPlayer == null) {
-                    initVideoPlayer();
-                }
 
+                initVideoPlayer();
                 loadMedia(getStepVideoUri(videoUrl));
+
             } else {
                 mVideoPlayerView.setVisibility(View.GONE);
                 mEmptyVideoView.setVisibility(View.VISIBLE);
@@ -169,19 +213,18 @@ public class RecipeStepFragment extends Fragment {
      * ExoPlayer Documentation @ https://google.github.io/ExoPlayer/guide.html
      */
     private void initVideoPlayer() {
-        if (mVideoPlayer == null) {
-            Log.d(TAG, "Initializing video player");
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-            RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
+        Log.d(TAG, "Initializing Video PLayer");
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+        RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
 
-            mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
-            mVideoPlayerView.setPlayer(mVideoPlayer);
-        }
+        mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), renderersFactory, trackSelector, loadControl);
+        mVideoPlayerView.setPlayer(mVideoPlayer);
     }
 
     private void loadMedia(Uri uri) {
-        if (uri != null) {
+        if (mVideoPlayer != null && uri != null) {
+            Log.d(TAG, "Loading media into video player");
             // Produces DataSource instances through which media data is loaded.
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
                     Util.getUserAgent(getContext(), "BakingApp"));
@@ -189,14 +232,16 @@ public class RecipeStepFragment extends Fragment {
             MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(uri);
             // Prepare the player with the source.
-            mVideoPlayer.prepare(videoSource);
+            mVideoPlayer.prepare(videoSource, false, false);
+
+            if (mPlayerPosition >= 0) {
+                mVideoPlayer.seekTo(mPlayerPosition);
+            }
             mVideoPlayer.setPlayWhenReady(true);
-            Log.d(TAG, "Loading video into player");
         }
     }
 
     private Uri getStepVideoUri(String videoUrl) {
-        Log.d(TAG, "Creating video url for " + videoUrl);
         Uri uri = null;
         if (videoUrl != null && !videoUrl.equals("")) {
             uri = Uri.parse(videoUrl);

@@ -37,7 +37,7 @@ public class RecipeStepActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
-                .add(R.id.recipe_step_fragment_container, recipeStepFragment)
+                .replace(R.id.recipe_step_fragment_container, recipeStepFragment)
                 .commit();
 
     }

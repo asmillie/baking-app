@@ -22,9 +22,6 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
 
     private static final String TAG = RecipeInstructionsActivity.class.getSimpleName();
 
-    //TODO Create Master / Detail Fragments
-    //TODO Implement ViewModels & Factories
-    //TODO Set up Master / Detail Views based on device screen width
     private RecipeInstructionsViewModel mViewModel;
     private Integer mRecipeId;
 
@@ -46,13 +43,10 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
         Integer recipeId = Constants.RECIPE_ID_EXTRA_DEFAULT;
         if (savedInstanceState != null) {
             recipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
-            Log.d(TAG, "onCreate: Assigned recipeId from savedInstanceState");
         } else {
-            Log.d(TAG, "onCreate: No savedInstanceState, Proceeding to check Intent");
             Intent intent = getIntent();
             if (intent.hasExtra(Constants.RECIPE_ID_EXTRA)) {
                 recipeId = intent.getIntExtra(Constants.RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
-                Log.d(TAG, "onCreate: Assigned recipeId from Intent");
             } else {
                 missingRecipeID();
             }
@@ -65,7 +59,6 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
 
             if (stepFragmentContainer != null) {
                 mTwoPane = true;
-                Log.d(TAG, "Two pane mode enabled");
             }
 
             initViewModel(recipeId);
@@ -77,14 +70,12 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(Constants.RECIPE_ID_EXTRA, mRecipeId);
-        Log.d(TAG, "onSaveInstanceState: Recipe Id saved");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
-        Log.d(TAG, "onRestoreInstanceState: Recipe Id assigned");
     }
 
     private void initViewModel(Integer recipeId) {
