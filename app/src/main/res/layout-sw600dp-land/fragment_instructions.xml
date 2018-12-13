@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.InstructionsFragment">
+
+    <TextView
+        android:text="@string/ingredients_lv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/recipe_instructions_header_margin"/>
+
+    <ListView
+        android:id="@+id/ingredient_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/ingredient_lv_padding"
+        android:layout_marginLeft="@dimen/fragment_instructions_list_left_margin"
+        android:layout_marginStart="@dimen/fragment_instructions_list_left_margin"
+        android:dividerHeight="0dp"
+        android:divider="@null"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/recipe_steps_header"
+        android:layout_margin="@dimen/recipe_instructions_header_margin"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/steps_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/fragment_instructions_list_left_margin"
+        android:layout_marginStart="@dimen/fragment_instructions_list_left_margin"/>
+
+</LinearLayout>
