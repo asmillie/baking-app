@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;

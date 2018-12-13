@@ -49,7 +49,6 @@ public class RecipeStepFragment extends Fragment {
     private static final String TAG = RecipeStepFragment.class.getSimpleName();
 
     private Integer mRecipeId;
-    private Integer mStepId;
     private Step mStep;
 
     private RecipeInstructionsViewModel mViewModel;
@@ -74,21 +73,13 @@ public class RecipeStepFragment extends Fragment {
         return fragment;
     }
 
-    public void setStepId(Integer stepId) {
-        if (mViewModel == null) {
-            mStepId = stepId;
-            initViewModel();
-        } else {
-            mViewModel.setStepId(stepId);
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
         }
+        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -104,7 +95,7 @@ public class RecipeStepFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         initViewModel();
-
+        Log.d(TAG, "onCreateView");
         return view;
     }
 
@@ -132,6 +123,7 @@ public class RecipeStepFragment extends Fragment {
 
     private void releaseVideoPlayer() {
         if (mVideoPlayer != null) {
+            Log.d(TAG, "Releasing video player");
             mVideoPlayer.stop();
             mVideoPlayer.release();
             mVideoPlayer = null;
