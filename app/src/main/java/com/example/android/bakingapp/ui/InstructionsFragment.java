@@ -116,7 +116,6 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
         mStepsAdapter = new StepsAdapter(mContext, this);
 
-        //mStepsRecyclerView.setHasFixedSize(true);
         mStepsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         );
