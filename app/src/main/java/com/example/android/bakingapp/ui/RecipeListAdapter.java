@@ -56,7 +56,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         Recipe recipe = mRecipeList.get(position);
 
         holder.mNameTV.setText(recipe.getName());
-        holder.mServingsTV.setText("Makes " + recipe.getServings() + " Servings"); //TODO: Resource string with placeholder
+
+        String servingsText = mContext.getResources().getString(R.string.servings, recipe.getServings().toString());
+        holder.mServingsTV.setText(servingsText);
     }
 
     @Override

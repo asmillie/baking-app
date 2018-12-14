@@ -6,6 +6,7 @@
     <!-- Recipe List -->
     <string name="view_recipe_btn">View Recipe</string>
     <string name="empty_recipe_list">No recipes found</string>
+    <string name="servings">Makes %1s Servings</string>
 
     <!-- Recipe Instructions -->
     <string name="ingredients_lv_header">Ingredients</string>
