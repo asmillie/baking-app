@@ -149,6 +149,7 @@ public class RecipeStepFragment extends Fragment {
                     public void onChanged(@Nullable Step step) {
                         Log.d(TAG, "observed changed to step");
                         mStep = step;
+                        releaseVideoPlayer();
                         populateUI();
                     }
                 });
