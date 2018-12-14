@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.Recipe;
 
 import butterknife.BindBool;
 import butterknife.BindView;
@@ -83,6 +85,13 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
         if (mTwoPane) {
             mViewModel.setStepId(Constants.SELECTED_STEP_ID_DEFAULT);
         }
+
+        mViewModel.getRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(Recipe recipe) {
+                setTitle(recipe.getName());
+            }
+        });
     }
 
     private void initFragments() {

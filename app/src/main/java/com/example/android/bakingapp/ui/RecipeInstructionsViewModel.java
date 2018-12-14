@@ -8,11 +8,12 @@ import android.arch.lifecycle.ViewModel;
 
 import com.example.android.bakingapp.data.AppRepository;
 import com.example.android.bakingapp.data.Ingredient;
+import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.Step;
 
 import java.util.List;
 
-class RecipeInstructionsViewModel extends ViewModel {
+public class RecipeInstructionsViewModel extends ViewModel {
 
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;
@@ -37,6 +38,10 @@ class RecipeInstructionsViewModel extends ViewModel {
     RecipeInstructionsViewModel(AppRepository appRepository, Integer recipeId) {
         this.mAppRepository = appRepository;
         this.mRecipeId = recipeId;
+    }
+
+    LiveData<Recipe> getRecipe() {
+        return mAppRepository.getRecipeById(mRecipeId);
     }
 
     LiveData<List<Ingredient>> getIngredients() {

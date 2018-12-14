@@ -10,7 +10,7 @@ import com.example.android.bakingapp.data.Recipe;
 
 import java.util.List;
 
-class RecipeListViewModel extends AndroidViewModel {
+public class RecipeListViewModel extends AndroidViewModel {
 
     private final AppRepository mRepository;
     private LiveData<List<Recipe>> mRecipeList;
