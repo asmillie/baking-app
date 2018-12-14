@@ -141,10 +141,6 @@ public class AppRepository {
         }
     }
 
-    public LiveData<List<Ingredient>> getIngredients() {
-        return mDatabase.ingredientDao().getIngredients();
-    }
-
     public LiveData<List<Ingredient>> getIngredientsByRecipeId(Integer recipeId) {
         return mDatabase.ingredientDao().getIngredientsByRecipeId(recipeId);
     }

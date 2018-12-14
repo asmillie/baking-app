@@ -18,7 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/go_to_recipe_step"/>
 
     <View
         android:layout_width="match_parent"

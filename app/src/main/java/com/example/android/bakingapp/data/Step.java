@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
@@ -65,7 +64,7 @@ public class Step implements Parcelable {
     };
 
     @Ignore
-    protected Step(Parcel in) {
+    Step(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.shortDescription = ((String) in.readValue((String.class.getClassLoader())));
         this.description = ((String) in.readValue((String.class.getClassLoader())));
@@ -80,14 +79,6 @@ public class Step implements Parcelable {
     @Ignore
     public Step() {}
 
-    /**
-     *
-     * @param id
-     * @param shortDescription
-     * @param description
-     * @param videoURL
-     * @param thumbnailURL
-     */
     public Step(Integer id, Integer recipeId, String shortDescription, String description, String videoURL, String thumbnailURL) {
         super();
         this.id = id;
@@ -102,10 +93,6 @@ public class Step implements Parcelable {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public Integer getRecipeId() {
         return recipeId;
     }
@@ -116,10 +103,6 @@ public class Step implements Parcelable {
 
     public String getShortDescription() {
         return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
     }
 
     public String getDescription() {
@@ -134,16 +117,8 @@ public class Step implements Parcelable {
         return videoURL;
     }
 
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-    }
-
-    public String getThumbnailURL() {
+    String getThumbnailURL() {
         return thumbnailURL;
-    }
-
-    public void setThumbnailURL(String thumbnailURL) {
-        this.thumbnailURL = thumbnailURL;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

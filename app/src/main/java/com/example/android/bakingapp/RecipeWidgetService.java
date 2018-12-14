@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -26,16 +25,12 @@ public class RecipeWidgetService extends RemoteViewsService {
 
 class RecipeListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private static final String TAG = RecipeListRemoteViewsFactory.class.getSimpleName();
-
-    private Context mContext;
-    private int mAppWidgetId;
+    private final Context mContext;
     private AppRepository mAppRepository;
     private List<Recipe> mRecipeList;
 
     RecipeListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
-        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override

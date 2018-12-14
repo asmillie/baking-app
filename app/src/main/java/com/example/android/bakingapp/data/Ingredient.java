@@ -58,26 +58,19 @@ public class Ingredient implements Parcelable
     };
 
     @Ignore
-    protected Ingredient(Parcel in) {
+    Ingredient(Parcel in) {
         this.quantity = ((double) in.readValue((double.class.getClassLoader())));
         this.measure = ((String) in.readValue((String.class.getClassLoader())));
         this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
+    /*
      * No args constructor for use in serialization
-     *
      */
     @Ignore
     public Ingredient() {
     }
 
-    /**
-     *
-     * @param measure
-     * @param ingredient
-     * @param quantity
-     */
     public Ingredient(Integer id, Integer recipeId, double quantity, String measure, String ingredient) {
         super();
         this.id = id;
@@ -103,16 +96,8 @@ public class Ingredient implements Parcelable
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
     public String getMeasure() {
         return measure;
-    }
-
-    public void setMeasure(String measure) {
-        this.measure = measure;
     }
 
     public String getIngredient() {

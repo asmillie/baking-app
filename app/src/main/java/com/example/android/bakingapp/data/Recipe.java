@@ -57,7 +57,7 @@ public class Recipe implements Parcelable
     };
 
     @Ignore
-    protected Recipe(Parcel in) {
+    Recipe(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         in.readList(this.ingredients, (com.example.android.bakingapp.data.Ingredient.class.getClassLoader()));
@@ -73,15 +73,6 @@ public class Recipe implements Parcelable
     public Recipe() {
     }
 
-    /**
-     *
-     * @param ingredients
-     * @param id
-     * @param servings
-     * @param name
-     * @param image
-     * @param steps
-     */
     @Ignore
     public Recipe(Integer id, String name, List<Ingredient> ingredients, List<Step> steps, Integer servings, String image) {
         super();
@@ -119,10 +110,6 @@ public class Recipe implements Parcelable
 
     public List<Step> getSteps() {
         return steps;
-    }
-
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
     }
 
     public Integer getServings() {

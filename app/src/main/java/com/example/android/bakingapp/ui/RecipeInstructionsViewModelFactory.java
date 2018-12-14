@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.example.android.bakingapp.data.AppRepository;
 
-public class RecipeInstructionsViewModelFactory extends ViewModelProvider.AndroidViewModelFactory {
+class RecipeInstructionsViewModelFactory extends ViewModelProvider.AndroidViewModelFactory {
 
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;

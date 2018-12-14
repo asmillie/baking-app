@@ -2,20 +2,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/colorAccent"
-    android:padding="@dimen/widget_margin">
+    style="@style/WidgetTheme">
 
     <ImageView
         android:id="@+id/back_btn"
         android:src="@drawable/chevron_left"
-        android:layout_width="20dp"
-        android:layout_height="match_parent" />
+        android:layout_width="@dimen/widget_back_btn_width"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/go_back_to_recipe_list"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@android:color/holo_blue_light">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/recipe_name_tv"
@@ -23,19 +22,17 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/widget_ingredient_list_header_text_size"
             android:layout_marginLeft="@dimen/widget_ingredient_list_header_margin"
-            android:layout_marginRight="@dimen/recipe_instructions_header_margin"/>
-
-        <!-- TODO: Back button -->
+            android:layout_marginStart="@dimen/widget_ingredient_list_header_margin"
+            android:layout_marginRight="@dimen/recipe_instructions_header_margin"
+            android:layout_marginEnd="@dimen/widget_ingredient_list_header_margin"/>
 
         <ListView
             android:id="@+id/ingredients_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_margin="@dimen/widget_ingredients_list_margin"
             android:contentDescription="@string/appwidget_text"
             android:text="@string/appwidget_text"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/widget_recipe_list_text_size"
             android:textStyle="bold|italic" />
 
         <TextView

@@ -51,11 +51,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     private boolean isLargeScreen() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-
-        if (dpWidth >= 600) {
-            return true;
-        }
-        return false;
+        return dpWidth >= 600;
     }
 
     private void initViewModel() {

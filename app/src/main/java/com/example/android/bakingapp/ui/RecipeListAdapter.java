@@ -37,10 +37,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         notifyDataSetChanged();
     }
 
-    Recipe getRecipe(int position) {
-        return mRecipeList.get(position);
-    }
-
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

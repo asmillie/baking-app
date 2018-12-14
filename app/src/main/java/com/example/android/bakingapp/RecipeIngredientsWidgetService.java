@@ -3,7 +3,6 @@ package com.example.android.bakingapp;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -21,9 +20,6 @@ public class RecipeIngredientsWidgetService extends RemoteViewsService {
 
 class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private static final String TAG = IngredientsListRemoteViewsFactory.class.getSimpleName();
-
-    private final int mAppWidgetId;
     private AppRepository mAppRepository;
     private final Integer mRecipeId;
     private List<Ingredient> mIngredientList;
@@ -31,9 +27,7 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
 
     IngredientsListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
-        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mRecipeId = intent.getIntExtra(Constants.WIDGET_RECIPE_ID_EXTRA, Constants.RECIPE_ID_EXTRA_DEFAULT);
-        Log.d(TAG, "Created RVFactory for Recipe ID #" + mRecipeId);
     }
 
     @Override
@@ -46,7 +40,6 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
         if (!mRecipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
             mIngredientList = mAppRepository.getIngredientListByRecipeId(mRecipeId);
         }
-        Log.d(TAG, "onDataSetChanged: Ingredient List contains " + getCount() + " items");
     }
 
     @Override
@@ -63,7 +56,6 @@ class IngredientsListRemoteViewsFactory implements RemoteViewsService.RemoteView
     @Override
     public RemoteViews getViewAt(int position) {
         if (getCount() == 0) {
-            Log.d(TAG, "Ingredients list empty, return null remoteviews object");
             return null;
         }
 

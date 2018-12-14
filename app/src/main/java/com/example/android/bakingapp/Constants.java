@@ -26,8 +26,8 @@ public class Constants {
     public static final String PLAYER_POSITION_EXTRA = "video-position";
 
     /** Widget Extras **/
-    private static final String WIDGET_ACTION_PREFIX = ".WIDGET_ACTION.";
-    private static final String WIDGET_EXTRA_PREFIX = ".WIDGET_EXTRA.";
+    private static final String WIDGET_ACTION_PREFIX = APP_BASE_URI + ".WIDGET_ACTION.";
+    private static final String WIDGET_EXTRA_PREFIX = APP_BASE_URI + ".WIDGET_EXTRA.";
 
     public static final String WIDGET_GET_RECIPES_ACTION = WIDGET_ACTION_PREFIX + "GET_RECIPES";
     public static final String WIDGET_GET_INGREDIENTS_ACTION = WIDGET_ACTION_PREFIX + "GET_INGREDIENTS";

@@ -3,14 +3,11 @@ package com.example.android.bakingapp.ui;
 import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +22,6 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -51,7 +47,6 @@ public class RecipeStepFragment extends Fragment {
     private Integer mRecipeId;
     private Step mStep;
 
-    private RecipeInstructionsViewModel mViewModel;
     private SimpleExoPlayer mVideoPlayer;
     private long mPlayerPosition;
 
@@ -139,9 +134,9 @@ public class RecipeStepFragment extends Fragment {
             if (application != null) {
                 RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(application, mRecipeId);
 
-                mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
+                RecipeInstructionsViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
 
-                mViewModel.getStep().observe(this, new Observer<Step>() {
+                viewModel.getStep().observe(this, new Observer<Step>() {
                     @Override
                     public void onChanged(@Nullable Step step) {
                         mStep = step;

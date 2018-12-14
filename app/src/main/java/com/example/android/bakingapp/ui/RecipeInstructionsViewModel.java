@@ -5,7 +5,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 
 import com.example.android.bakingapp.data.AppRepository;
 import com.example.android.bakingapp.data.Ingredient;
@@ -25,7 +24,7 @@ class RecipeInstructionsViewModel extends ViewModel {
      * @ https://developer.android.com/reference/android/arch/lifecycle/Transformations
      */
     private final MutableLiveData<Integer> mStepId = new MutableLiveData<>();
-    private LiveData<Step> mStep = Transformations.switchMap(mStepId, new Function<Integer, LiveData<Step>>() {
+    private final LiveData<Step> mStep = Transformations.switchMap(mStepId, new Function<Integer, LiveData<Step>>() {
         @Override
         public LiveData<Step> apply(Integer stepId) {
             if (mAppRepository != null) {

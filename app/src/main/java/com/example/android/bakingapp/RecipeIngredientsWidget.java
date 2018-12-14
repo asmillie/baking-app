@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 import com.example.android.bakingapp.utils.PreferenceUtils;
 
@@ -16,18 +15,15 @@ public class RecipeIngredientsWidget extends AppWidgetProvider {
 
     private static final String TAG = RecipeIngredientsWidget.class.getSimpleName();
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         RemoteViews views;
         Integer recipeId = PreferenceUtils.getWidgetRecipeId(context, appWidgetId);
-        Log.d(TAG, "updateAppWidget: Preference utils retrieved recipe id #" + recipeId + " for widget id #" + appWidgetId);
         if (recipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT)) {
             views = getRecipeList(context, appWidgetId);
-            Log.d(TAG, "updateAppWidget: getRecipeList() called");
         } else {
             views = getIngredientList(context, appWidgetId, recipeId);
-            Log.d(TAG, "updateAppWidget: getIngredientList() called");
         }
 
         // Instruct the widget manager to update the widget

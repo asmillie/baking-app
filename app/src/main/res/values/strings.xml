@@ -14,12 +14,20 @@
     <string name="recipe_steps_header">Recipe Steps</string>
     <string name="no_video_found">No Video Found</string>
     <string name="no_step_description">No description found</string>
+    <string name="go_to_recipe_step">Go to Recipe Step</string>
 
     <!-- Widget -->
-    <string name="add_widget">Add widget</string>
     <string name="appwidget_text">Recipe Ingredients</string>
     <string name="widget_empty_recipe_list">No Recipes Found</string>
     <string name="widget_empty_ingredient_list">No Ingredients Found</string>
+    <string name="go_back_to_recipe_list">Go back to Recipe List</string>
+    <string name="view_recipe_ingredients">View recipe ingredients</string>
+
+    <!-- Video Player -->
+    <string name="rewind_button_content_description">Rewind</string>
+    <string name="play_button_content_description">Play</string>
+    <string name="pause_button_content_description">Pause</string>
+
 
 
 </resources>
