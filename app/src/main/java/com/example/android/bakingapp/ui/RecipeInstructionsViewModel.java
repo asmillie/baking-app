@@ -15,8 +15,6 @@ import java.util.List;
 
 class RecipeInstructionsViewModel extends ViewModel {
 
-    private static final String TAG = RecipeInstructionsViewModel.class.getSimpleName();
-
     private final AppRepository mAppRepository;
     private final Integer mRecipeId;
     private LiveData<List<Ingredient>> mIngredients;
@@ -31,7 +29,6 @@ class RecipeInstructionsViewModel extends ViewModel {
         @Override
         public LiveData<Step> apply(Integer stepId) {
             if (mAppRepository != null) {
-                Log.d(TAG, "Viewmodel retrieving new step from repository");
                 return mAppRepository.getStepById(stepId);
             }
             return null;
@@ -58,12 +55,12 @@ class RecipeInstructionsViewModel extends ViewModel {
     }
 
     void setStepId(Integer stepId) {
-        Log.d(TAG, "Setting step id to " + stepId);
-        mStepId.setValue(stepId);
+        if (!stepId.equals(mStepId.getValue())) {
+            mStepId.setValue(stepId);
+        }
     }
 
     LiveData<Step> getStep() {
-        Log.d(TAG, "Returning step from ViewModel");
         return mStep;
     }
 }

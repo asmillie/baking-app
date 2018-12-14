@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
@@ -49,7 +50,7 @@ public class RecipeStepActivity extends AppCompatActivity {
             RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getApplication(), recipeId);
 
             mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
-
+            Log.d(TAG, "ViewModel init: setting step id");
             mViewModel.setStepId(stepId);
         }
     }
