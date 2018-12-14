@@ -79,7 +79,6 @@ public class RecipeStepFragment extends Fragment {
         if (getArguments() != null) {
             mRecipeId = getArguments().getInt(Constants.RECIPE_ID_EXTRA);
         }
-        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -95,7 +94,6 @@ public class RecipeStepFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
         initViewModel();
-        Log.d(TAG, "onCreateView");
         return view;
     }
 
@@ -123,7 +121,6 @@ public class RecipeStepFragment extends Fragment {
 
     private void releaseVideoPlayer() {
         if (mVideoPlayer != null) {
-            Log.d(TAG, "Releasing video player");
             mVideoPlayer.stop();
             mVideoPlayer.release();
             mVideoPlayer = null;
@@ -147,7 +144,6 @@ public class RecipeStepFragment extends Fragment {
                 mViewModel.getStep().observe(this, new Observer<Step>() {
                     @Override
                     public void onChanged(@Nullable Step step) {
-                        Log.d(TAG, "observed changed to step");
                         mStep = step;
                         releaseVideoPlayer();
                         populateUI();
@@ -158,7 +154,6 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void populateUI() {
-        Log.d(TAG, "Populating UI");
         if (mStep != null) {
             String stepDesc = mStep.getDescription();
             String stepShortDesc = mStep.getShortDescription();
@@ -200,7 +195,6 @@ public class RecipeStepFragment extends Fragment {
      * ExoPlayer Documentation @ https://google.github.io/ExoPlayer/guide.html
      */
     private void initVideoPlayer() {
-        Log.d(TAG, "Initializing Video PLayer");
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
         RenderersFactory renderersFactory = new DefaultRenderersFactory(getContext());
@@ -211,7 +205,6 @@ public class RecipeStepFragment extends Fragment {
 
     private void loadMedia(Uri uri) {
         if (mVideoPlayer != null && uri != null) {
-            Log.d(TAG, "Loading media into video player");
             // Produces DataSource instances through which media data is loaded.
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
                     Util.getUserAgent(getContext(), "BakingApp"));
