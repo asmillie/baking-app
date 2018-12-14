@@ -83,7 +83,7 @@ public class RecipeStepFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
@@ -193,7 +193,7 @@ public class RecipeStepFragment extends Fragment {
         }
     }
 
-    /**
+    /*
      * Simple Exo Player implemented following
      * Udacity Advanced Android Classical Music Quiz
      * and
