@@ -1,10 +1,8 @@
 package com.example.android.bakingapp.data;
 
-import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.AppExecutors;
 import com.example.android.bakingapp.Constants;
@@ -29,8 +27,6 @@ public class AppRepository {
     private final RecipeService mRecipeService;
     private final AppDatabase mDatabase;
 
-    private final Context mContext;
-
     private AppRepository(Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -41,7 +37,6 @@ public class AppRepository {
         mRecipeService = retrofit.create(RecipeService.class);
 
         mDatabase = AppDatabase.getInstance(context);
-        mContext = context;
     }
 
     //Singleton instantiation of Repository, modified from AppDatabase.java
@@ -54,21 +49,21 @@ public class AppRepository {
         return sInstance;
     }
 
-    public LiveData<List<Recipe>> getRecipes() {
+    public LiveData<List<Recipe>> getRecipes(Context context) {
         LiveData<List<Recipe>> recipes = mDatabase.recipeDao().getRecipes();
         //TODO: Trigger refreshRecipes by some metric (ie. last_updated), which will
         //update the database after contacting the server for fresh data. This method
         //will then always return from the database.
 
         if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0) {
-            refreshRecipes();
+            refreshRecipes(context);
         }
 
         return recipes;
     }
 
-    private void refreshRecipes() {
-        if (!NetworkUtils.isConnected(mContext)) {
+    private void refreshRecipes(Context context) {
+        if (!NetworkUtils.isConnected(context)) {
             return;
         }
 

@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-/**
+/*
  * Room Database implemented following guide
  * @ https://developer.android.com/training/data-storage/room/
  * and Lesson 9 of the Udacity nanodegree program
