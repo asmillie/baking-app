@@ -62,7 +62,9 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
             }
 
             initViewModel(recipeId);
-            initFragments();
+            if (savedInstanceState == null) {
+                initFragments();
+            }
         }
     }
 
