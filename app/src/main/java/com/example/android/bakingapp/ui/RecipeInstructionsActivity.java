@@ -20,8 +20,6 @@ import butterknife.ButterKnife;
 
 public class RecipeInstructionsActivity extends AppCompatActivity implements InstructionsFragment.OnStepSelectedListener {
 
-    private static final String TAG = RecipeInstructionsActivity.class.getSimpleName();
-
     private RecipeInstructionsViewModel mViewModel;
     private Integer mRecipeId;
 
@@ -29,7 +27,6 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     FrameLayout stepFragmentContainer;
 
     @BindBool(R.bool.two_pane_mode_enabled) boolean mTwoPane;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +107,7 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     }
 
     private void missingRecipeID() {
-        Toast toast = Toast.makeText(this, "No recipe selected", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this, getString(R.string.no_recipe_id), Toast.LENGTH_SHORT);
         toast.show();
         finish();
     }

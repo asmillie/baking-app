@@ -15,21 +15,16 @@ import android.widget.TextView;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.data.Ingredient;
 import com.example.android.bakingapp.data.Recipe;
-import com.example.android.bakingapp.data.RecipeAndInstructions;
 
 import java.util.List;
 
-import butterknife.BindBool;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeListActivity extends AppCompatActivity implements RecipeListAdapter.RecipeClickListener {
 
-    private RecipeListViewModel mViewModel;
     private List<Recipe> mRecipeList;
-
     private RecipeListAdapter mAdapter;
 
     @BindView(R.id.recipe_list_rv)
@@ -64,9 +59,9 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
     }
 
     private void initViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+        RecipeListViewModel viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
 
-        mViewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+        viewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;

@@ -156,11 +156,10 @@ public class RecipeStepFragment extends Fragment {
     private void populateUI() {
         if (mStep != null) {
             String stepDesc = mStep.getDescription();
-            String stepShortDesc = mStep.getShortDescription();
             String videoUrl = mStep.getVideoURL();
 
             if (stepDesc == null || stepDesc.equals("")) {
-                mStepDesc.setText("No description found");
+                mStepDesc.setText(R.string.no_step_description);
             } else {
                 mStepDesc.setText(stepDesc);
             }

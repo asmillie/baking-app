@@ -74,7 +74,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         @BindView(R.id.view_recipe_btn)
         Button mViewRecipeBtn;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mViewRecipeBtn.setOnClickListener(this);

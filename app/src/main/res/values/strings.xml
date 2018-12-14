@@ -7,11 +7,13 @@
     <string name="view_recipe_btn">View Recipe</string>
     <string name="empty_recipe_list">No recipes found</string>
     <string name="servings">Makes %1s Servings</string>
+    <string name="no_recipe_id">No recipe selected</string>
 
     <!-- Recipe Instructions -->
     <string name="ingredients_lv_header">Ingredients</string>
     <string name="recipe_steps_header">Recipe Steps</string>
     <string name="no_video_found">No Video Found</string>
+    <string name="no_step_description">No description found</string>
 
     <!-- Widget -->
     <string name="add_widget">Add widget</string>

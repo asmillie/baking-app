@@ -14,8 +14,6 @@ public class RecipeStepActivity extends AppCompatActivity {
 
     private static final String TAG = RecipeStepActivity.class.getSimpleName();
 
-    private RecipeInstructionsViewModel mViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +27,6 @@ public class RecipeStepActivity extends AppCompatActivity {
 
         if (recipeId.equals(Constants.RECIPE_ID_EXTRA_DEFAULT) || stepId.equals(Constants.RECIPE_STEP_ID_DEFAULT)) {
             finish();
-            //TODO Toast message for missing id?
         }
 
         initViewModel(recipeId, stepId);
@@ -49,9 +46,9 @@ public class RecipeStepActivity extends AppCompatActivity {
         if (recipeId != null && stepId != null) {
             RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getApplication(), recipeId);
 
-            mViewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
+            RecipeInstructionsViewModel viewModel = ViewModelProviders.of(this, factory).get(RecipeInstructionsViewModel.class);
             Log.d(TAG, "ViewModel init: setting step id");
-            mViewModel.setStepId(stepId);
+            viewModel.setStepId(stepId);
         }
     }
 }

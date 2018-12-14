@@ -19,7 +19,4 @@ public interface StepDao {
 
     @Insert
     void saveAllSteps(List<Step> steps);
-
-    @Delete
-    void deleteAllSteps(List<Step> steps);
 }

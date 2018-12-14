@@ -1,6 +1,5 @@
 package com.example.android.bakingapp.ui;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import butterknife.ButterKnife;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
-    private final Context mContext;
     private List<Step> mStepList;
     private final OnStepClickListener mClickListener;
 
@@ -26,8 +24,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         void onStepSelected(Integer stepId);
     }
 
-    StepsAdapter(Context context, OnStepClickListener clickListener) {
-        this.mContext = context;
+    StepsAdapter(OnStepClickListener clickListener) {
         this.mClickListener = clickListener;
     }
 

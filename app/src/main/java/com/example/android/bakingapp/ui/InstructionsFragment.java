@@ -34,16 +34,12 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
     private static final String TAG = InstructionsFragment.class.getSimpleName();
 
-    private RecipeInstructionsViewModel mViewModel;
-
     OnStepSelectedListener mStepSelectedListener;
 
     private Integer mRecipeId;
     private List<Ingredient> mIngredients;
-    private List<Step> mSteps;
 
     private Context mContext;
-    private ArrayAdapter<String> mIngredientsAdapter;
     private StepsAdapter mStepsAdapter;
 
     @BindView(R.id.ingredient_lv)
@@ -106,15 +102,15 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "Creating fragment view");
+
         View view = inflater.inflate(R.layout.fragment_instructions, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mContext = view.getContext();
 
-        mStepsAdapter = new StepsAdapter(mContext, this);
+        mStepsAdapter = new StepsAdapter(this);
 
         mStepsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
@@ -150,23 +146,20 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
     private void initViewModel() {
         RecipeInstructionsViewModelFactory factory = new RecipeInstructionsViewModelFactory(getActivity().getApplication(), mRecipeId);
 
-        mViewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
+        RecipeInstructionsViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(RecipeInstructionsViewModel.class);
 
-        mViewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
+        viewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
                 mIngredients = ingredients;
                 populateIngredientList();
-                Log.d(TAG, "Observed change to ingredients (" + ingredients.size() + " items), list updated. Notified adapter");
             }
         });
 
-        mViewModel.getSteps().observe(this, new Observer<List<Step>>() {
+        viewModel.getSteps().observe(this, new Observer<List<Step>>() {
             @Override
             public void onChanged(@Nullable List<Step> steps) {
-                mSteps = steps;
                 mStepsAdapter.setStepList(steps);
-                Log.d(TAG, "Observed change to steps, list updated");
             }
         });
     }
@@ -178,10 +171,9 @@ public class InstructionsFragment extends Fragment implements StepsAdapter.OnSte
 
                 ingredientList.add(ingredient.toString());
             }
-            Log.d(TAG, "Ingredients list built and ready for adapter");
         }
 
-        mIngredientsAdapter = new ArrayAdapter<>(mContext, R.layout.ingredient_list_item, ingredientList);
+        ArrayAdapter<String> mIngredientsAdapter = new ArrayAdapter<>(mContext, R.layout.ingredient_list_item, ingredientList);
         mIngredientsListView.setAdapter(mIngredientsAdapter);
     }
 
