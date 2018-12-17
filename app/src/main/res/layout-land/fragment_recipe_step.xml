@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.RecipeStepFragment">
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/recipe_step_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:layout_margin="@dimen/video_player_margin"
+            app:resize_mode="fixed_width"
+            app:show_buffering="always"/>
+
+        <TextView
+            android:id="@+id/empty_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_video_found"
+            android:layout_margin="@dimen/video_player_margin"
+            android:textSize="@dimen/empty_video_text_size"
+            android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/step_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/video_player_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="@dimen/recipe_step_text_size"/>
+    </LinearLayout>
+</ScrollView>
