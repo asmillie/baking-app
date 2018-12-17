@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -75,6 +77,14 @@ public class RecipeInstructionsActivity extends AppCompatActivity implements Ins
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mRecipeId = savedInstanceState.getInt(Constants.RECIPE_ID_EXTRA);
+    }
+
+    @VisibleForTesting
+    public CountingIdlingResource getRepositoryCountingIdlingResource() {
+        if (mViewModel == null) {
+            initViewModel(mRecipeId);
+        }
+        return mViewModel.getRepositoryCountingIdlingResource();
     }
 
     private void initViewModel(Integer recipeId) {

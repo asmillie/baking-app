@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+import android.support.test.espresso.idling.CountingIdlingResource;
 
 import com.example.android.bakingapp.data.AppRepository;
 import com.example.android.bakingapp.data.Ingredient;
@@ -66,5 +67,9 @@ public class RecipeInstructionsViewModel extends ViewModel {
 
     LiveData<Step> getStep() {
         return mStep;
+    }
+
+    public CountingIdlingResource getRepositoryCountingIdlingResource() {
+        return mAppRepository.getCountingIdlingResource();
     }
 }

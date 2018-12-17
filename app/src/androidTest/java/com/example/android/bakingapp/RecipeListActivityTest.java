@@ -38,9 +38,6 @@ public class RecipeListActivityTest {
     private static final int RECIPE_POSITION = 1;
     private static final Integer RECIPE_ID = 2;
 
-    private static final int INGREDIENT_POSITION = 0;
-    private static final String INGREDIENT_STRING = "350.0 G Bittersweet chocolate (60-70% cacao)";
-
     @Rule
     public IntentsTestRule<RecipeListActivity> mActivityRule = new IntentsTestRule<>(
             RecipeListActivity.class
