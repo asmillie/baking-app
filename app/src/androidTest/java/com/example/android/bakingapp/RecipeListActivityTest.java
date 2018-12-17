@@ -3,7 +3,10 @@ package com.example.android.bakingapp;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,21 +20,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.IsNot.not;
 
+/*
+ * Resources used to learn and implement Espresso Tests
+ * Counting Idling Resources:
+ * https://medium.com/@wingoku/synchronizing-espresso-with-custom-threads-using-idling-resource-retrofit-70439ad2f07
+ * Disabling Animations & Interacting with RecyclerView:
+ * https://stackoverflow.com/questions/43751079/espresso-testing-disable-animation
+ */
 @RunWith(AndroidJUnit4.class)
 public class RecipeListActivityTest {
 
-    private IdlingResource mIdlingResource;
+    private IdlingRegistry mIdlingRegistry;
+    private CountingIdlingResource mRepositoryIdlingResource;
+    private CountingIdlingResource mActivityIdlingResource;
 
     private static final int RECIPE_POSITION = 1;
     private static final Integer RECIPE_ID = 2;
@@ -46,19 +60,31 @@ public class RecipeListActivityTest {
 
     @Before
     public void stubAllIntents() {
-        intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
-        intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+        //intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
+        //intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
     }
 
     @Before
-    public void registerIdlingResources() {
-        mIdlingResource = mActivityRule.getActivity().getIdlingResource();
+    public void setupIdlingResources() {
+        mRepositoryIdlingResource = mActivityRule.getActivity().getRepositoryCountingIdlingResource();
+        mActivityIdlingResource = mActivityRule.getActivity().getActivityCountingIdlingResource();
+
+        mIdlingRegistry = IdlingRegistry.getInstance();
+        mIdlingRegistry.register(mRepositoryIdlingResource);
+        mIdlingRegistry.register(mActivityIdlingResource);
     }
 
     @Test
-    public void selectRecipe_OpensRecipeInstructionsActivity() {
-        onData(anything()).inAdapterView(withId(R.id.recipe_list_rv)).atPosition(RECIPE_POSITION).perform(click());
+    public void selectRecipe_SendsCorrectIntent() {
+        onView(withId(R.id.recipe_list_rv))
+            .perform(RecyclerViewActions.actionOnItemAtPosition(RECIPE_POSITION, TestUtils.clickChildViewById(R.id.view_recipe_btn)));
 
-        intended(allOf(hasExtra(Constants.RECIPE_ID_EXTRA, RECIPE_ID)));
+        intended(hasExtra(Constants.RECIPE_ID_EXTRA, RECIPE_ID));
+    }
+
+    @After
+    public void unregisterIdlingResources() {
+        mIdlingRegistry.unregister(mRepositoryIdlingResource);
+        mIdlingRegistry.unregister(mActivityIdlingResource);
     }
 }

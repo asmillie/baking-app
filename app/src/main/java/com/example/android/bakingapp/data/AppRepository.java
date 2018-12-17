@@ -2,6 +2,7 @@ package com.example.android.bakingapp.data;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.util.Log;
 
 import com.example.android.bakingapp.AppExecutors;
@@ -27,6 +28,8 @@ public class AppRepository {
     private final RecipeService mRecipeService;
     private final AppDatabase mDatabase;
 
+    private CountingIdlingResource mCountingIdlingResource;
+
     private AppRepository(Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -37,6 +40,7 @@ public class AppRepository {
         mRecipeService = retrofit.create(RecipeService.class);
 
         mDatabase = AppDatabase.getInstance(context);
+        this.mCountingIdlingResource = new CountingIdlingResource("AppRepository");
     }
 
     //Singleton instantiation of Repository, modified from AppDatabase.java
@@ -49,16 +53,18 @@ public class AppRepository {
         return sInstance;
     }
 
+    public CountingIdlingResource getCountingIdlingResource() {
+        return mCountingIdlingResource;
+    }
+
     public LiveData<List<Recipe>> getRecipes(Context context) {
+        mCountingIdlingResource.increment();
         LiveData<List<Recipe>> recipes = mDatabase.recipeDao().getRecipes();
-        //TODO: Trigger refreshRecipes by some metric (ie. last_updated), which will
-        //update the database after contacting the server for fresh data. This method
-        //will then always return from the database.
 
         if (recipes == null || recipes.getValue() == null || recipes.getValue().size() == 0) {
             refreshRecipes(context);
         }
-
+        mCountingIdlingResource.decrement();
         return recipes;
     }
 
@@ -66,7 +72,7 @@ public class AppRepository {
         if (!NetworkUtils.isConnected(context)) {
             return;
         }
-
+        mCountingIdlingResource.increment();
         mRecipeService.listRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
@@ -93,27 +99,28 @@ public class AppRepository {
                         saveIngredients(ingredientsAllRecipes);
                         saveSteps(stepsAllRecipes);
 
-                        Log.d(TAG, "Recipes successfully retrieved from api and saved in db.");
                     }
 
-                } else {
-                    Log.d(TAG, "Retrofit received response but encountered error retrieving data");
                 }
+                mCountingIdlingResource.decrement();
             }
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 Log.e(TAG, "Error contacting server for recipes: " + t.toString());
+                mCountingIdlingResource.decrement();
             }
         });
     }
 
     private void saveRecipes(final List<Recipe> recipes) {
         if (recipes != null && recipes.size() > 0) {
+            mCountingIdlingResource.increment();
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     mDatabase.recipeDao().saveRecipes(recipes);
+                    mCountingIdlingResource.decrement();
                 }
             });
         }
@@ -121,10 +128,12 @@ public class AppRepository {
 
     private void saveIngredients(final List<Ingredient> ingredients) {
         if (ingredients != null && ingredients.size() > 0) {
+            mCountingIdlingResource.increment();
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     mDatabase.ingredientDao().saveAllIngredients(ingredients);
+                    mCountingIdlingResource.decrement();
                 }
             });
         }
@@ -132,10 +141,12 @@ public class AppRepository {
 
     private void saveSteps(final List<Step> steps) {
         if (steps != null && steps.size() > 0) {
+            mCountingIdlingResource.increment();
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     mDatabase.stepDao().saveAllSteps(steps);
+                    mCountingIdlingResource.decrement();
                 }
             });
         }

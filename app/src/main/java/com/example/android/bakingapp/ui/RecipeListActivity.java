@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 
 import com.example.android.bakingapp.Constants;
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.SimpleIdlingResource;
 import com.example.android.bakingapp.data.Recipe;
 
 import java.util.List;
@@ -28,6 +28,10 @@ import butterknife.ButterKnife;
 
 public class RecipeListActivity extends AppCompatActivity implements RecipeListAdapter.RecipeClickListener {
 
+    private CountingIdlingResource mActivityCountingIdlingResource;
+
+    private RecipeListViewModel mViewModel;
+
     private List<Recipe> mRecipeList;
     private RecipeListAdapter mAdapter;
 
@@ -36,22 +40,12 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
 
     @BindView(R.id.empty_view) TextView mEmptyView;
 
-    @Nullable
-    private SimpleIdlingResource mIdlingResource;
-
-    @VisibleForTesting
-    @NonNull
-    public IdlingResource getIdlingResource() {
-        if (mIdlingResource == null) {
-            mIdlingResource = new SimpleIdlingResource();
-        }
-        return mIdlingResource;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
+
+        mActivityCountingIdlingResource = new CountingIdlingResource("RecipeListActivity");
 
         ButterKnife.bind(this);
 
@@ -69,10 +63,23 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListA
         return dpWidth >= 600;
     }
 
-    private void initViewModel() {
-        RecipeListViewModel viewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+    @VisibleForTesting
+    public CountingIdlingResource getRepositoryCountingIdlingResource() {
+        if (mViewModel == null) {
+            initViewModel();
+        }
+        return mViewModel.getRepositoryCountingIdlingResource();
+    }
 
-        viewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
+    @VisibleForTesting
+    public CountingIdlingResource getActivityCountingIdlingResource() {
+        return mActivityCountingIdlingResource;
+    }
+
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(this).get(RecipeListViewModel.class);
+
+        mViewModel.getRecipeList().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 mRecipeList = recipes;
