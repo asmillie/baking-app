@@ -1,14 +1,9 @@
 package com.example.android.bakingapp;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.example.android.bakingapp.ui.RecipeListActivity;
@@ -19,26 +14,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.core.AllOf.allOf;
-import static org.hamcrest.core.IsNot.not;
 
 /*
  * Resources used to learn and implement Espresso Tests
  * Counting Idling Resources:
  * https://medium.com/@wingoku/synchronizing-espresso-with-custom-threads-using-idling-resource-retrofit-70439ad2f07
- * Disabling Animations & Interacting with RecyclerView:
+ * Disabling Animations:
  * https://stackoverflow.com/questions/43751079/espresso-testing-disable-animation
+ * Interacting with RecyclerView Child Views:
+ * https://stackoverflow.com/questions/28476507/using-espresso-to-click-view-inside-recyclerview-item
  */
 @RunWith(AndroidJUnit4.class)
 public class RecipeListActivityTest {
@@ -57,12 +45,6 @@ public class RecipeListActivityTest {
     public IntentsTestRule<RecipeListActivity> mActivityRule = new IntentsTestRule<>(
             RecipeListActivity.class
     );
-
-    @Before
-    public void stubAllIntents() {
-        //intending(isInternal()).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
-        //intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
-    }
 
     @Before
     public void setupIdlingResources() {
